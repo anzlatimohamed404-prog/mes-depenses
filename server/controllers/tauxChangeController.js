@@ -49,3 +49,29 @@ exports.remove = async (req, res) => {
     res.status(500).json({ message: 'Erreur serveur', error });
   }
 };
+
+exports.actualiser = async (req, res) => {
+  try {
+    const taux = await TauxChange.findAll({ where: { utilisateur_id: req.utilisateur.id } });
+    if (taux.length === 0) {
+      return res.json({ message: 'Aucun taux à actualiser', updated: [] });
+    }
+
+    const response = await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/eur.json');
+    const data = await response.json();
+    const rates = data.eur;
+
+    const updated = [];
+    for (const t of taux) {
+      const devise = t.devise.toLowerCase();
+      if (rates[devise]) {
+        await t.update({ taux: rates[devise] });
+        updated.push({ devise: t.devise, taux: rates[devise] });
+      }
+    }
+
+    res.json({ message: 'Taux actualisés', updated });
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur lors de l\'actualisation', error: error.message });
+  }
+};

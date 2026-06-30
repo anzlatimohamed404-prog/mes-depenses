@@ -2,10 +2,11 @@ const { Operation, Beneficiaire } = require('../models/index');
 
 exports.getAll = async (req, res) => {
   try {
-    const { beneficiaire_id, annee } = req.query;
+    const { beneficiaire_id, annee, categorie } = req.query;
     const where = { utilisateur_id: req.utilisateur.id };
 
     if (beneficiaire_id) where.beneficiaire_id = beneficiaire_id;
+    if (categorie) where.categorie = categorie;
     if (annee) {
       const { Op } = require('sequelize');
       where.date_envoi = {
@@ -26,10 +27,15 @@ exports.getAll = async (req, res) => {
 
 exports.create = async (req, res) => {
   try {
-    const { montant_eur, montant_devise, devise, frais, date_envoi, note, beneficiaire_id } = req.body;
+    const { categorie, montant_eur, montant_devise, devise, date_envoi, note, beneficiaire_id } = req.body;
     const operation = await Operation.create({
-      montant_eur, montant_devise, devise, frais, date_envoi, note,
-      beneficiaire_id,
+      categorie: categorie || 'autre',
+      montant_eur,
+      montant_devise: montant_devise || null,
+      devise: devise || null,
+      date_envoi,
+      note,
+      beneficiaire_id: beneficiaire_id || null,
       utilisateur_id: req.utilisateur.id
     });
     res.status(201).json(operation);
@@ -53,7 +59,6 @@ exports.remove = async (req, res) => {
 
 exports.getStats = async (req, res) => {
   try {
-    const { sequelize } = require('../config/db');
     const operations = await Operation.findAll({
       where: { utilisateur_id: req.utilisateur.id },
       include: [{ model: Beneficiaire, attributes: ['nom', 'pays', 'devise'] }]

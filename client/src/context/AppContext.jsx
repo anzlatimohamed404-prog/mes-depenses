@@ -9,6 +9,7 @@ export const AppProvider = ({ children }) => {
   const [operations, setOperations] = useState([]);
   const [beneficiaires, setBeneficiaires] = useState([]);
   const [taux, setTaux] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [stats, setStats] = useState({ total: 0, mois: 0, nb_operations: 0 });
 
   useEffect(() => {
@@ -17,6 +18,8 @@ export const AppProvider = ({ children }) => {
       fetchOperations();
       fetchStats();
       fetchTaux();
+      fetchCategories();
+      fetchProfile();
     }
   }, [token]);
 
@@ -70,11 +73,40 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      const res = await axios.get('/categories');  
+      setCategories(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchProfile = async () => {
+    try {
+      const res = await axios.get('/auth/profile');
+      setUser(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const updateProfile = async (data) => {
+    const res = await axios.put('/auth/profile', data);
+    setUser(res.data.utilisateur);
+    return res.data;
+  };
+
+  const changePassword = async (data) => {
+    const res = await axios.put('/auth/password', data);
+    return res.data;
+  };
+
   return (
     <AppContext.Provider value={{
-      user, token, operations, beneficiaires, taux, stats,
-      login, logout,
-      fetchBeneficiaires, fetchOperations, fetchStats, fetchTaux
+      user, token, operations, beneficiaires, taux, stats, categories,
+      login, logout, updateProfile, changePassword, fetchProfile,
+      fetchBeneficiaires, fetchOperations, fetchStats, fetchTaux, fetchCategories
     }}>
       {children}
     </AppContext.Provider>

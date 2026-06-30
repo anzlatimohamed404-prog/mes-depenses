@@ -1,10 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const { connectDB, sequelize } = require('./config/db');
-require('./models/index');
 
 dotenv.config();
+
+const { connectDB, sequelize } = require('./config/db');
+require('./models/index');
 
 const app = express();
 
@@ -16,7 +17,7 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/beneficiaires', require('./routes/beneficiaireRoutes'));
 app.use('/api/operations', require('./routes/operationRoutes'));
 app.use('/api/taux-change', require('./routes/tauxChangeRoutes'));
-
+app.use('/api/categories', require('./routes/categorieRoutes'));
 connectDB();
 
 sequelize.sync({ alter: true }).then(() => {
@@ -31,3 +32,4 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Serveur démarré sur le port ${PORT}`);
 });
+

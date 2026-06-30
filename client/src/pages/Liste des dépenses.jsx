@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import axios from '../utils/axios';
 
@@ -13,7 +12,6 @@ const PAYS = [
 
 const Beneficiaires = () => {
   const { beneficiaires, operations, fetchBeneficiaires } = useApp();
-  const navigate = useNavigate();
   const [showForm, setShowForm] = useState(false);
   const [selected, setSelected] = useState(null);
   const [filterAnnee, setFilterAnnee] = useState('');
@@ -119,11 +117,6 @@ const Beneficiaires = () => {
               <div style={styles.cardRight}>
                 <p style={styles.cardTotal}>+{getTotalBene(b.id).toFixed(2)} €</p>
                 <p style={styles.cardCount}>{operations.filter(o => o.beneficiaire_id === b.id).length} envois</p>
-                <button
-                  onClick={(e) => { e.stopPropagation(); navigate('/operations', { state: { beneficiaireId: b.id } }); }}
-                  style={styles.btnEffectuer}>
-                  Effectuer une opération
-                </button>
               </div>
             </div>
 
@@ -154,7 +147,7 @@ const Beneficiaires = () => {
                 {getOpsBene(b.id).length === 0 && <p style={styles.empty}>Aucune opération</p>}
                 <div style={styles.totalBar}>
                   <span>Total {filterAnnee || 'général'}</span>
-                  <strong style={{color:'var(--primary-color)'}}>{getTotalBene(b.id).toFixed(2)} €</strong>
+                  <strong style={{color:'#0C447C'}}>{getTotalBene(b.id).toFixed(2)} €</strong>
                 </div>
               </div>
             )}
@@ -169,25 +162,24 @@ const Beneficiaires = () => {
 const styles = {
   container: { padding: '24px', maxWidth: '900px', margin: '0 auto' },
   header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' },
-  title: { fontSize: '22px', fontWeight: '700', color: 'var(--primary-color)' },
-  btnAdd: { background: 'var(--primary-color)', color: 'white', border: 'none', padding: '10px 18px', borderRadius: '8px', cursor: 'pointer', fontSize: '14px' },
+  title: { fontSize: '22px', fontWeight: '700', color: '#0C447C' },
+  btnAdd: { background: '#0C447C', color: 'white', border: 'none', padding: '10px 18px', borderRadius: '8px', cursor: 'pointer', fontSize: '14px' },
   formCard: { background: 'white', borderRadius: '12px', padding: '20px', marginBottom: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' },
   formTitle: { fontSize: '16px', fontWeight: '600', marginBottom: '16px', color: '#333' },
   formGrid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' },
   label: { fontSize: '12px', color: '#888', display: 'block', marginBottom: '4px' },
   input: { width: '100%', padding: '9px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '14px', boxSizing: 'border-box' },
-  btnSubmit: { marginTop: '16px', width: '100%', padding: '11px', background: 'var(--primary-color)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '15px' },
+  btnSubmit: { marginTop: '16px', width: '100%', padding: '11px', background: '#0C447C', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '15px' },
   grid: { display: 'flex', flexDirection: 'column', gap: '12px' },
   card: { background: 'white', borderRadius: '12px', padding: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', cursor: 'pointer' },
   cardTop: { display: 'flex', gap: '14px', alignItems: 'center' },
-  avatar: { width: '44px', height: '44px', borderRadius: '50%', background: '#E6F1FB', color: 'var(--primary-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '18px', flexShrink: 0 },
+  avatar: { width: '44px', height: '44px', borderRadius: '50%', background: '#E6F1FB', color: '#0C447C', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '18px', flexShrink: 0 },
   cardNom: { fontSize: '15px', fontWeight: '600', color: '#333' },
   cardInfo: { fontSize: '12px', color: '#888' },
-  tag: { fontSize: '11px', background: '#E6F1FB', color: 'var(--primary-color)', padding: '2px 8px', borderRadius: '20px' },
+  tag: { fontSize: '11px', background: '#E6F1FB', color: '#0C447C', padding: '2px 8px', borderRadius: '20px' },
   cardRight: { marginLeft: 'auto', textAlign: 'right' },
-  cardTotal: { fontSize: '16px', fontWeight: '700', color: 'var(--primary-color)' },
+  cardTotal: { fontSize: '16px', fontWeight: '700', color: '#0C447C' },
   cardCount: { fontSize: '12px', color: '#888' },
-  btnEffectuer: { marginTop: '8px', background: '#E6F1FB', color: 'var(--primary-color)', border: 'none', padding: '6px 12px', borderRadius: '8px', cursor: 'pointer', fontSize: '12px', fontWeight: '600' },
   detail: { marginTop: '16px', borderTop: '1px solid #f0f0f0', paddingTop: '16px' },
   detailHeader: { display: 'flex', justifyContent: 'space-between', marginBottom: '12px' },
   filterInput: { padding: '7px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '13px' },
@@ -196,7 +188,7 @@ const styles = {
   opDate: { fontSize: '13px', color: '#555' },
   opNote: { fontSize: '12px', color: '#aaa' },
   opRight: { textAlign: 'right' },
-  opMontant: { fontSize: '14px', fontWeight: '600', color: 'var(--primary-color)' },
+  opMontant: { fontSize: '14px', fontWeight: '600', color: '#0C447C' },
   opDevise: { fontSize: '12px', color: '#888' },
   totalBar: { display: 'flex', justifyContent: 'space-between', marginTop: '12px', padding: '10px', background: '#f9f9f9', borderRadius: '8px', fontSize: '14px' },
   empty: { textAlign: 'center', color: '#aaa', padding: '20px' }

@@ -7,21 +7,22 @@ const Operation = sequelize.define('Operation', {
     primaryKey: true,
     autoIncrement: true,
   },
+  categorie: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    defaultValue: 'autre',
+  },
   montant_eur: {
     type: DataTypes.FLOAT,
     allowNull: false,
   },
   montant_devise: {
     type: DataTypes.FLOAT,
-    allowNull: false,
+    allowNull: true,
   },
   devise: {
     type: DataTypes.STRING,
-    allowNull: false,
-  },
-  frais: {
-    type: DataTypes.FLOAT,
-    defaultValue: 0,
+    allowNull: true,
   },
   date_envoi: {
     type: DataTypes.DATEONLY,
@@ -33,7 +34,7 @@ const Operation = sequelize.define('Operation', {
   },
   beneficiaire_id: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true,
   },
   utilisateur_id: {
     type: DataTypes.INTEGER,

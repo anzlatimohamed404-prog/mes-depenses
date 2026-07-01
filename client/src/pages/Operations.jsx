@@ -114,7 +114,6 @@ const Operations = () => {
   );
 
   const anneesFiltrees = annees.filter(a => a.includes(filterAnneeSearch));
-
   const isVirement = form.categorie === 'virement';
 
   return (
@@ -130,7 +129,7 @@ const Operations = () => {
         <div style={styles.formCard}>
           <h2 style={styles.formTitle}>Nouvelle opération</h2>
           <form onSubmit={handleSubmit}>
-            <div style={styles.formGrid}>
+            <div className="operations-form-grid">
               <div style={{position: 'relative'}}>
                 <label style={styles.label}>Catégorie</label>
                 <input style={styles.input} type="text" placeholder="Choisir ou écrire une catégorie..."
@@ -201,7 +200,7 @@ const Operations = () => {
 
       <div style={styles.beneList}>
         {beneficiaires.map(b => (
-          <div key={b.id} style={styles.beneRow}>
+          <div key={b.id} className="operations-bene-row">
             <div style={styles.beneInfo}>
               <div style={styles.avatar}>{b.nom?.charAt(0)}</div>
               <div>
@@ -219,7 +218,7 @@ const Operations = () => {
         )}
       </div>
 
-      <div style={styles.filters}>
+      <div className="operations-filters">
         <div style={{position: 'relative'}}>
           <input style={styles.filterInput} type="text" placeholder="Rechercher un bénéficiaire..."
             value={filterBeneSearch}
@@ -294,42 +293,39 @@ const Operations = () => {
 };
 
 const styles = {
-  container: { padding: '24px', maxWidth: '900px', margin: '0 auto' },
+  container: { padding: '16px', maxWidth: '900px', margin: '0 auto' },
   header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' },
   title: { fontSize: '22px', fontWeight: '700', color: 'var(--primary-color)' },
-  btnAdd: { background: 'var(--primary-color)', color: 'white', border: 'none', padding: '10px 18px', borderRadius: '8px', cursor: 'pointer', fontSize: '14px' },
-  formCard: { background: 'white', borderRadius: '12px', padding: '20px', marginBottom: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' },
+  btnAdd: { background: 'var(--primary-color)', color: 'white', border: 'none', padding: '10px 18px', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', whiteSpace: 'nowrap' },
+  formCard: { background: 'white', borderRadius: '12px', padding: '16px', marginBottom: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' },
   formTitle: { fontSize: '16px', fontWeight: '600', marginBottom: '16px', color: '#333' },
-  formGrid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' },
   label: { fontSize: '12px', color: '#888', display: 'block', marginBottom: '4px' },
   input: { width: '100%', padding: '9px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '14px', boxSizing: 'border-box' },
   dropdown: { position: 'absolute', top: '100%', left: 0, right: 0, background: 'white', border: '1px solid #ddd', borderRadius: '8px', marginTop: '4px', maxHeight: '180px', overflowY: 'auto', zIndex: 10, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' },
   dropdownItem: { padding: '10px 12px', fontSize: '13px', cursor: 'pointer', borderBottom: '1px solid #f5f5f5' },
   dropdownEmpty: { padding: '10px 12px', fontSize: '13px', color: '#aaa' },
-  conversion: { background: '#E6F1FB', borderRadius: '8px', padding: '10px', gridColumn: 'span 2' },
+  conversion: { background: '#E6F1FB', borderRadius: '8px', padding: '10px' },
   conversionValue: { fontSize: '18px', fontWeight: '700', color: 'var(--primary-color)' },
   btnSubmit: { marginTop: '16px', width: '100%', padding: '11px', background: 'var(--primary-color)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '15px' },
   beneList: { background: 'white', borderRadius: '12px', padding: '8px 16px', marginBottom: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' },
-  beneRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #f0f0f0' },
   beneInfo: { display: 'flex', gap: '12px', alignItems: 'center' },
   beneNom: { fontSize: '14px', fontWeight: '600', color: '#333' },
   beneSub: { fontSize: '12px', color: '#888' },
-  btnEffectuer: { background: '#E6F1FB', color: 'var(--primary-color)', border: 'none', padding: '8px 14px', borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: '600' },
-  filters: { display: 'flex', gap: '12px', marginBottom: '16px', alignItems: 'flex-start' },
-  filterInput: { padding: '8px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '13px', width: '200px' },
-  total: { marginLeft: 'auto', fontSize: '14px', color: '#333', paddingTop: '8px' },
+  btnEffectuer: { background: '#E6F1FB', color: 'var(--primary-color)', border: 'none', padding: '8px 14px', borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: '600', whiteSpace: 'nowrap' },
+  filterInput: { padding: '8px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '13px', width: '100%' },
+  total: { fontSize: '14px', color: '#333', paddingTop: '8px' },
   list: { background: 'white', borderRadius: '12px', padding: '8px 16px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' },
   opItem: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #f0f0f0' },
   opLeft: { display: 'flex', gap: '12px', alignItems: 'center' },
-  avatar: { width: '38px', height: '38px', borderRadius: '50%', background: '#E6F1FB', color: 'var(--primary-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '16px' },
+  avatar: { width: '38px', height: '38px', borderRadius: '50%', background: '#E6F1FB', color: 'var(--primary-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '16px', flexShrink: 0 },
   opNom: { fontSize: '14px', fontWeight: '600', color: '#333' },
   opInfo: { fontSize: '12px', color: '#888' },
   opNote: { fontSize: '12px', color: '#aaa' },
-  opRight: { textAlign: 'right' },
+  opRight: { textAlign: 'right', flexShrink: 0, marginLeft: '8px' },
   opMontant: { fontSize: '15px', fontWeight: '700', color: 'var(--primary-color)' },
   opDevise: { fontSize: '12px', color: '#888' },
   btnDel: { background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px', marginTop: '4px' },
   empty: { textAlign: 'center', color: '#aaa', padding: '30px' }
 };
 
-export default Operations; 
+export default Operations;

@@ -12,6 +12,7 @@
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
+  --primary-color: #0C447C;
 
   font: 18px/145% var(--sans);
   letter-spacing: 0.18px;
@@ -23,15 +24,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-html,
-body {
+html, body {
   margin: 0;
   min-height: 100%;
 }
 
-*,
-*::before,
-*::after {
+*, *::before, *::after {
   box-sizing: border-box;
 }
 
@@ -46,8 +44,7 @@ body {
   min-height: 100vh;
 }
 
-h1,
-h2 {
+h1, h2 {
   font-family: var(--heading);
   font-weight: 500;
   color: var(--text-h);
@@ -96,8 +93,158 @@ code {
   }
 }
 
+/* NAVBAR */
+.navbar-hamburger {
+  display: none;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+}
 
+.navbar-links {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
 
-:root {
-  --primary-color: #0C447C;
-} 
+@media (max-width: 768px) {
+  .navbar-hamburger {
+    display: block;
+  }
+  .navbar-links {
+    display: none;
+  }
+}
+
+/* DASHBOARD */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+/* RESPONSIVE GÉNÉRAL */
+@media (max-width: 768px) {
+  #root {
+    width: 100%;
+    padding: 0;
+  }
+}
+
+/* OPERATIONS */
+.operations-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.operations-filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.operations-bene-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+@media (max-width: 768px) {
+  .operations-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .operations-filters {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .operations-bene-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
+/* BENEFICIAIRES */
+.bene-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.bene-card-top {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.bene-card-right {
+  margin-left: auto;
+  text-align: right;
+}
+
+@media (max-width: 768px) {
+  .bene-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bene-card-top {
+    flex-wrap: wrap;
+  }
+
+  .bene-card-right {
+    margin-left: 0;
+    text-align: left;
+    width: 100%;
+  }
+}
+
+/* PARAMETRES */
+.params-form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.params-form-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+
+.params-fusion-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .params-form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .params-form-grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .params-fusion-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

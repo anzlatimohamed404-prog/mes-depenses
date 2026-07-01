@@ -72,7 +72,7 @@ const Beneficiaires = () => {
         <div style={styles.formCard}>
           <h2 style={styles.formTitle}>Nouveau bénéficiaire</h2>
           <form onSubmit={handleSubmit}>
-            <div style={styles.formGrid}>
+            <div className="bene-form-grid">
               <div>
                 <label style={styles.label}>Nom</label>
                 <input style={styles.input} type="text" placeholder="Nom complet"
@@ -109,14 +109,14 @@ const Beneficiaires = () => {
       <div style={styles.grid}>
         {beneficiaires.map(b => (
           <div key={b.id} style={styles.card} onClick={() => setSelected(selected?.id === b.id ? null : b)}>
-            <div style={styles.cardTop}>
+            <div className="bene-card-top">
               <div style={styles.avatar}>{b.nom?.charAt(0)}</div>
-              <div>
+              <div style={{flex: 1}}>
                 <p style={styles.cardNom}>{b.nom}</p>
                 <p style={styles.cardInfo}>{b.pays} — {b.devise}</p>
                 <span style={styles.tag}>{b.relation}</span>
               </div>
-              <div style={styles.cardRight}>
+              <div className="bene-card-right">
                 <p style={styles.cardTotal}>+{getTotalBene(b.id).toFixed(2)} €</p>
                 <p style={styles.cardCount}>{operations.filter(o => o.beneficiaire_id === b.id).length} envois</p>
                 <button
@@ -167,35 +167,32 @@ const Beneficiaires = () => {
 };
 
 const styles = {
-  container: { padding: '24px', maxWidth: '900px', margin: '0 auto' },
+  container: { padding: '16px', maxWidth: '900px', margin: '0 auto' },
   header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' },
   title: { fontSize: '22px', fontWeight: '700', color: 'var(--primary-color)' },
   btnAdd: { background: 'var(--primary-color)', color: 'white', border: 'none', padding: '10px 18px', borderRadius: '8px', cursor: 'pointer', fontSize: '14px' },
-  formCard: { background: 'white', borderRadius: '12px', padding: '20px', marginBottom: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' },
+  formCard: { background: 'white', borderRadius: '12px', padding: '16px', marginBottom: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' },
   formTitle: { fontSize: '16px', fontWeight: '600', marginBottom: '16px', color: '#333' },
-  formGrid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' },
   label: { fontSize: '12px', color: '#888', display: 'block', marginBottom: '4px' },
   input: { width: '100%', padding: '9px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '14px', boxSizing: 'border-box' },
   btnSubmit: { marginTop: '16px', width: '100%', padding: '11px', background: 'var(--primary-color)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '15px' },
   grid: { display: 'flex', flexDirection: 'column', gap: '12px' },
   card: { background: 'white', borderRadius: '12px', padding: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', cursor: 'pointer' },
-  cardTop: { display: 'flex', gap: '14px', alignItems: 'center' },
   avatar: { width: '44px', height: '44px', borderRadius: '50%', background: '#E6F1FB', color: 'var(--primary-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '18px', flexShrink: 0 },
   cardNom: { fontSize: '15px', fontWeight: '600', color: '#333' },
   cardInfo: { fontSize: '12px', color: '#888' },
   tag: { fontSize: '11px', background: '#E6F1FB', color: 'var(--primary-color)', padding: '2px 8px', borderRadius: '20px' },
-  cardRight: { marginLeft: 'auto', textAlign: 'right' },
   cardTotal: { fontSize: '16px', fontWeight: '700', color: 'var(--primary-color)' },
   cardCount: { fontSize: '12px', color: '#888' },
-  btnEffectuer: { marginTop: '8px', background: '#E6F1FB', color: 'var(--primary-color)', border: 'none', padding: '6px 12px', borderRadius: '8px', cursor: 'pointer', fontSize: '12px', fontWeight: '600' },
+  btnEffectuer: { marginTop: '8px', background: '#E6F1FB', color: 'var(--primary-color)', border: 'none', padding: '6px 12px', borderRadius: '8px', cursor: 'pointer', fontSize: '12px', fontWeight: '600', whiteSpace: 'nowrap' },
   detail: { marginTop: '16px', borderTop: '1px solid #f0f0f0', paddingTop: '16px' },
-  detailHeader: { display: 'flex', justifyContent: 'space-between', marginBottom: '12px' },
+  detailHeader: { display: 'flex', justifyContent: 'space-between', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' },
   filterInput: { padding: '7px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '13px' },
   btnDel: { background: 'none', border: '1px solid #A32D2D', color: '#A32D2D', padding: '6px 12px', borderRadius: '8px', cursor: 'pointer', fontSize: '13px' },
   opItem: { display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid #f9f9f9' },
   opDate: { fontSize: '13px', color: '#555' },
   opNote: { fontSize: '12px', color: '#aaa' },
-  opRight: { textAlign: 'right' },
+  opRight: { textAlign: 'right', flexShrink: 0 },
   opMontant: { fontSize: '14px', fontWeight: '600', color: 'var(--primary-color)' },
   opDevise: { fontSize: '12px', color: '#888' },
   totalBar: { display: 'flex', justifyContent: 'space-between', marginTop: '12px', padding: '10px', background: '#f9f9f9', borderRadius: '8px', fontSize: '14px' },

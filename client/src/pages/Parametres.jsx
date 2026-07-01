@@ -5,7 +5,7 @@ import axios from '../utils/axios';
 const palette = ['#0C447C', '#A32D2D', '#1E7A4D', '#7B2D9E', '#C77B0C', '#2D5A8C'];
 
 const Parametres = () => {
-  const { taux, fetchTaux, categories, fetchCategories, operations, fetchOperations, updateProfile, changePassword, user } = useApp();
+  const { taux, fetchTaux, categories, fetchCategories, operations, fetchOperations, updateProfile, changePassword, updateAvatar, user } = useApp();
   const [form, setForm] = useState({ pays: '', devise: '', taux: '' });
   const [showForm, setShowForm] = useState(false);
 
@@ -47,6 +47,25 @@ const Parametres = () => {
     setCouleur(prochaine);
     localStorage.setItem('themeColor', prochaine);
     document.documentElement.style.setProperty('--primary-color', prochaine);
+  };
+
+  const handleAvatarChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      alert('Image trop lourde (max 2MB)');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      try {
+        await updateAvatar(reader.result);
+        alert('✓ Photo de profil mise à jour !');
+      } catch (error) {
+        alert('Erreur lors de la mise à jour');
+      }
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleUpdateProfile = async (e) => {
@@ -170,40 +189,29 @@ const Parametres = () => {
           <h2 style={styles.title}>🎨 Apparence</h2>
         </div>
         <div style={styles.formCard}>
-          {/* Changer couleur */}
           <button onClick={handleChangerCouleur} style={{...styles.btnAdd, background: couleur, marginBottom: '16px'}}>
             🎨 Changer la couleur
           </button>
-
-          {/* Toggle mode sombre */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{ fontSize: '14px' }}>☀️ Mode clair</span>
+            <span style={{ fontSize: '14px', color: 'var(--text)' }}>☀️ Mode clair</span>
             <div
               onClick={handleToggleTheme}
               style={{
-                width: '52px',
-                height: '28px',
-                borderRadius: '14px',
+                width: '52px', height: '28px', borderRadius: '14px',
                 background: isDark ? 'var(--primary-color)' : '#ddd',
-                cursor: 'pointer',
-                position: 'relative',
-                transition: 'background 0.3s',
-                flexShrink: 0
+                cursor: 'pointer', position: 'relative',
+                transition: 'background 0.3s', flexShrink: 0
               }}
             >
               <div style={{
-                width: '22px',
-                height: '22px',
-                borderRadius: '50%',
-                background: 'white',
-                position: 'absolute',
-                top: '3px',
+                width: '22px', height: '22px', borderRadius: '50%',
+                background: 'white', position: 'absolute', top: '3px',
                 left: isDark ? '27px' : '3px',
                 transition: 'left 0.3s',
                 boxShadow: '0 1px 3px rgba(0,0,0,0.3)'
               }} />
             </div>
-            <span style={{ fontSize: '14px' }}>🌙 Mode sombre</span>
+            <span style={{ fontSize: '14px', color: 'var(--text)' }}>🌙 Mode sombre</span>
           </div>
         </div>
       </div>
@@ -213,7 +221,41 @@ const Parametres = () => {
         <div style={styles.header}>
           <h2 style={styles.title}>👤 Mon profil</h2>
         </div>
+
+        {/* AVATAR */}
         <div style={styles.formCard}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
+            <div style={{
+              width: '72px', height: '72px', borderRadius: '50%',
+              background: user?.avatar ? 'transparent' : '#E6F1FB',
+              overflow: 'hidden', display: 'flex', alignItems: 'center',
+              justifyContent: 'center', flexShrink: 0,
+              border: '2px solid var(--primary-color)'
+            }}>
+              {user?.avatar ? (
+                <img src={user.avatar} alt="avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              ) : (
+                <span style={{ fontSize: '28px', fontWeight: '700', color: 'var(--primary-color)' }}>
+                  {user?.nom?.charAt(0)?.toUpperCase()}
+                </span>
+              )}
+            </div>
+            <div>
+              <p style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text)', marginBottom: '6px' }}>
+                {user?.nom}
+              </p>
+              <label style={{
+                background: 'var(--primary-color)', color: 'white',
+                padding: '8px 14px', borderRadius: '8px',
+                cursor: 'pointer', fontSize: '13px', display: 'inline-block'
+              }}>
+                📷 Changer la photo
+                <input type="file" accept="image/*" onChange={handleAvatarChange} style={{ display: 'none' }} />
+              </label>
+            </div>
+          </div>
+
+          {/* Formulaire profil */}
           <form onSubmit={handleUpdateProfile}>
             <div className="params-form-grid-2">
               <div>
@@ -228,10 +270,11 @@ const Parametres = () => {
               </div>
             </div>
             <button style={{...styles.btnSubmit, marginTop: '16px', width: '100%'}} type="submit">Mettre à jour</button>
-            {msgProfil && <p style={{marginTop: '10px', fontSize: '13px', color: '#333'}}>{msgProfil}</p>}
+            {msgProfil && <p style={{marginTop: '10px', fontSize: '13px', color: 'var(--text)'}}>{msgProfil}</p>}
           </form>
         </div>
 
+        {/* Changer mot de passe */}
         <div style={styles.formCard}>
           <h2 style={styles.formTitle}>Changer le mot de passe</h2>
           <form onSubmit={handleChangePassword}>
@@ -248,7 +291,7 @@ const Parametres = () => {
               </div>
             </div>
             <button style={{...styles.btnSubmit, marginTop: '16px', width: '100%'}} type="submit">Changer le mot de passe</button>
-            {msgPwd && <p style={{marginTop: '10px', fontSize: '13px', color: '#333'}}>{msgPwd}</p>}
+            {msgPwd && <p style={{marginTop: '10px', fontSize: '13px', color: 'var(--text)'}}>{msgPwd}</p>}
           </form>
         </div>
       </div>

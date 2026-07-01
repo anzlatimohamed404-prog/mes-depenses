@@ -47,20 +47,14 @@ export const AppProvider = ({ children }) => {
 
   // Connexion de l'utilisateur
   const login = (userData, userToken) => {
-    // Sauvegarde du token dans le navigateur
     localStorage.setItem('token', userToken);
-
-    // Mise à jour des états
     setToken(userToken);
     setUser(userData);
   };
 
   // Déconnexion de l'utilisateur
   const logout = () => {
-    // Suppression du token
     localStorage.removeItem('token');
-
-    // Réinitialisation des données
     setToken(null);
     setUser(null);
     setOperations([]);
@@ -78,7 +72,6 @@ export const AppProvider = ({ children }) => {
   };
 
   // Récupération des opérations
-  // Les paramètres permettent de filtrer les résultats
   const fetchOperations = async (params = {}) => {
     try {
       const res = await axios.get('/operations', { params });
@@ -131,10 +124,7 @@ export const AppProvider = ({ children }) => {
   // Mise à jour des informations du profil
   const updateProfile = async (data) => {
     const res = await axios.put('/auth/profile', data);
-
-    // Mise à jour de l'utilisateur dans le contexte
     setUser(res.data.utilisateur);
-
     return res.data;
   };
 
@@ -144,8 +134,13 @@ export const AppProvider = ({ children }) => {
     return res.data;
   };
 
-  // Mise à disposition des données et fonctions
-  // pour tous les composants de l'application
+  // Mise à jour de la photo de profil
+  const updateAvatar = async (avatar) => {
+    const res = await axios.put('/auth/avatar', { avatar });
+    setUser(res.data.utilisateur);
+    return res.data;
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -156,11 +151,11 @@ export const AppProvider = ({ children }) => {
         taux,
         stats,
         categories,
-
         login,
         logout,
         updateProfile,
         changePassword,
+        updateAvatar,
         fetchProfile,
         fetchBeneficiaires,
         fetchOperations,

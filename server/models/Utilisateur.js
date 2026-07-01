@@ -20,6 +20,10 @@ const Utilisateur = sequelize.define('Utilisateur', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  avatar: {
+    type: DataTypes.TEXT('long'),
+    allowNull: true,
+  },
 }, {
   tableName: 'utilisateurs',
   timestamps: true,

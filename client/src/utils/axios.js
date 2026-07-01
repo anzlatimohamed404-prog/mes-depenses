@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: 'http://192.168.1.173:5000/api',
+  baseURL: 'https://mes-depenses-production.up.railway.app/api',
 });
 
 instance.interceptors.request.use((config) => {
@@ -12,4 +12,4 @@ instance.interceptors.request.use((config) => {
   return config;
 });
 
-export default instance;
+export default instance;        

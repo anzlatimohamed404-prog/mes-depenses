@@ -40,10 +40,10 @@ const Login = () => {
 };
 
 const styles = {
-  container: { minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0C447C' },
-  card: { background: 'white', padding: '40px', borderRadius: '16px', width: '360px' },
-  title: { textAlign: 'center', color: '#0C447C', marginBottom: '8px' },
-  subtitle: { textAlign: 'center', color: '#555', marginBottom: '24px', fontSize: '18px' },
+  container: { minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0C447C', padding: '16px' },
+  card: { background: 'white', padding: '32px 24px', borderRadius: '16px', width: '100%', maxWidth: '360px', boxSizing: 'border-box' },
+  title: { textAlign: 'center', color: '#0C447C', marginBottom: '4px', fontSize: '24px', lineHeight: '1.2' },
+  subtitle: { textAlign: 'center', color: '#555', marginBottom: '24px', fontSize: '16px', marginTop: '4px' },
   input: { width: '100%', padding: '10px', marginBottom: '12px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '14px', boxSizing: 'border-box' },
   btn: { width: '100%', padding: '12px', background: '#0C447C', color: 'white', border: 'none', borderRadius: '8px', fontSize: '15px', cursor: 'pointer' },
   erreur: { color: 'red', fontSize: '13px', marginBottom: '10px' },

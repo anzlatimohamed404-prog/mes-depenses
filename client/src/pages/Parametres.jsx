@@ -17,6 +17,7 @@ const Parametres = () => {
   const [fusionCible, setFusionCible] = useState('');
 
   const [couleur, setCouleur] = useState(localStorage.getItem('themeColor') || palette[0]);
+  const [isDark, setIsDark] = useState(localStorage.getItem('theme') === 'dark');
 
   const [profilForm, setProfilForm] = useState({ nom: '', email: '' });
   const [pwdForm, setPwdForm] = useState({ ancien_mot_de_passe: '', nouveau_mot_de_passe: '' });
@@ -32,6 +33,13 @@ const Parametres = () => {
       setProfilForm({ nom: user.nom || '', email: user.email || '' });
     }
   }, [user]);
+
+  const handleToggleTheme = () => {
+    const newTheme = isDark ? 'light' : 'dark';
+    setIsDark(!isDark);
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+  };
 
   const handleChangerCouleur = () => {
     const indexActuel = palette.indexOf(couleur);
@@ -159,12 +167,44 @@ const Parametres = () => {
       {/* SECTION THÈME */}
       <div style={styles.section}>
         <div style={styles.header}>
-          <h2 style={styles.title}>🎨 Couleur de l'application</h2>
+          <h2 style={styles.title}>🎨 Apparence</h2>
         </div>
         <div style={styles.formCard}>
-          <button onClick={handleChangerCouleur} style={{...styles.btnAdd, background: couleur}}>
+          {/* Changer couleur */}
+          <button onClick={handleChangerCouleur} style={{...styles.btnAdd, background: couleur, marginBottom: '16px'}}>
             🎨 Changer la couleur
           </button>
+
+          {/* Toggle mode sombre */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span style={{ fontSize: '14px' }}>☀️ Mode clair</span>
+            <div
+              onClick={handleToggleTheme}
+              style={{
+                width: '52px',
+                height: '28px',
+                borderRadius: '14px',
+                background: isDark ? 'var(--primary-color)' : '#ddd',
+                cursor: 'pointer',
+                position: 'relative',
+                transition: 'background 0.3s',
+                flexShrink: 0
+              }}
+            >
+              <div style={{
+                width: '22px',
+                height: '22px',
+                borderRadius: '50%',
+                background: 'white',
+                position: 'absolute',
+                top: '3px',
+                left: isDark ? '27px' : '3px',
+                transition: 'left 0.3s',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.3)'
+              }} />
+            </div>
+            <span style={{ fontSize: '14px' }}>🌙 Mode sombre</span>
+          </div>
         </div>
       </div>
 
@@ -353,32 +393,32 @@ const styles = {
   header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' },
   title: { fontSize: '18px', fontWeight: '700', color: 'var(--primary-color)' },
   btnAdd: { background: 'var(--primary-color)', color: 'white', border: 'none', padding: '10px 18px', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', whiteSpace: 'nowrap' },
-  formCard: { background: 'white', borderRadius: '12px', padding: '16px', marginBottom: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' },
-  formTitle: { fontSize: '16px', fontWeight: '600', marginBottom: '16px', color: '#333' },
+  formCard: { background: 'var(--bg-card)', borderRadius: '12px', padding: '16px', marginBottom: '20px', boxShadow: 'var(--shadow)' },
+  formTitle: { fontSize: '16px', fontWeight: '600', marginBottom: '16px', color: 'var(--text)' },
   inlineForm: { display: 'flex', gap: '10px', flexWrap: 'wrap' },
-  label: { fontSize: '12px', color: '#888', display: 'block', marginBottom: '4px' },
-  input: { width: '100%', padding: '9px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '14px', boxSizing: 'border-box' },
+  label: { fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' },
+  input: { width: '100%', padding: '9px', borderRadius: '8px', border: '1px solid var(--border)', fontSize: '14px', boxSizing: 'border-box', background: 'var(--input-bg)', color: 'var(--text)' },
   btnSubmit: { padding: '9px 18px', background: 'var(--primary-color)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', whiteSpace: 'nowrap' },
-  list: { background: 'white', borderRadius: '12px', padding: '8px 16px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' },
-  catItem: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #f0f0f0' },
+  list: { background: 'var(--bg-card)', borderRadius: '12px', padding: '8px 16px', boxShadow: 'var(--shadow)' },
+  catItem: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid var(--border)' },
   catLeft: { display: 'flex', gap: '12px', alignItems: 'center', flex: 1 },
   catIcon: { fontSize: '22px', flexShrink: 0 },
-  catNom: { fontSize: '14px', fontWeight: '600', color: '#333' },
-  catSub: { fontSize: '12px', color: '#888' },
+  catNom: { fontSize: '14px', fontWeight: '600', color: 'var(--text)' },
+  catSub: { fontSize: '12px', color: 'var(--text-secondary)' },
   catActions: { display: 'flex', gap: '8px', flexShrink: 0 },
-  editInput: { padding: '6px 10px', borderRadius: '6px', border: '1px solid var(--primary-color)', fontSize: '14px', width: '100%' },
+  editInput: { padding: '6px 10px', borderRadius: '6px', border: '1px solid var(--primary-color)', fontSize: '14px', width: '100%', background: 'var(--input-bg)', color: 'var(--text)' },
   btnEdit: { background: '#E6F1FB', color: 'var(--primary-color)', border: 'none', padding: '6px 10px', borderRadius: '6px', cursor: 'pointer', fontSize: '14px' },
   btnSave: { background: 'var(--primary-color)', color: 'white', border: 'none', padding: '6px 10px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' },
-  btnCancel: { background: 'none', border: '1px solid #ddd', padding: '6px 10px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' },
-  fusionBox: { background: 'white', borderRadius: '12px', padding: '16px', marginTop: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' },
-  fusionTitle: { fontSize: '14px', fontWeight: '600', color: '#333', marginBottom: '10px' },
-  tauxItem: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 0', borderBottom: '1px solid #f0f0f0', flexWrap: 'wrap', gap: '8px' },
-  tauxPays: { fontSize: '15px', fontWeight: '600', color: '#333' },
-  tauxDevise: { fontSize: '12px', color: '#888' },
+  btnCancel: { background: 'none', border: '1px solid var(--border)', padding: '6px 10px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', color: 'var(--text)' },
+  fusionBox: { background: 'var(--bg-card)', borderRadius: '12px', padding: '16px', marginTop: '12px', boxShadow: 'var(--shadow)' },
+  fusionTitle: { fontSize: '14px', fontWeight: '600', color: 'var(--text)', marginBottom: '10px' },
+  tauxItem: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 0', borderBottom: '1px solid var(--border)', flexWrap: 'wrap', gap: '8px' },
+  tauxPays: { fontSize: '15px', fontWeight: '600', color: 'var(--text)' },
+  tauxDevise: { fontSize: '12px', color: 'var(--text-secondary)' },
   tauxRight: { textAlign: 'right' },
   tauxValeur: { fontSize: '14px', fontWeight: '600', color: 'var(--primary-color)', marginBottom: '6px' },
   btnDel: { background: 'none', border: '1px solid #A32D2D', color: '#A32D2D', padding: '5px 10px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' },
-  empty: { textAlign: 'center', color: '#aaa', padding: '20px' }
+  empty: { textAlign: 'center', color: 'var(--text-secondary)', padding: '20px' }
 };
 
 export default Parametres;

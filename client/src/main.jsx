@@ -11,6 +11,10 @@ if (savedColor) {
   document.documentElement.style.setProperty('--primary-color', savedColor);
 }
 
+// Appliquer le mode sombre/clair sauvegardé
+const savedTheme = localStorage.getItem('theme') || 'light';
+document.documentElement.setAttribute('data-theme', savedTheme);
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>

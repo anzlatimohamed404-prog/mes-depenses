@@ -3,6 +3,10 @@ const jwt = require('jsonwebtoken');
 const { Utilisateur } = require('../models');
 const { sequelize } = require('../config/db');
 
+const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value || '');
+
+const getJwtSecret = () => process.env.JWT_SECRET || 'dev_secret_change_me';
+
 // =======================
 // Inscription
 // =======================
@@ -10,10 +14,26 @@ exports.register = async (req, res) => {
   try {
     // Lire les données envoyées par le client.
     const { nom, email, mot_de_passe } = req.body;
+    const nomNormalise = (nom || '').trim();
+    const emailNormalise = (email || '').trim().toLowerCase();
 
-    // Normaliser l'email et le nom pour éviter les erreurs de casse ou d'espaces.
-    const emailNormalise = email.trim().toLowerCase();
-    const nomNormalise = nom.trim();
+    if (!nomNormalise || !emailNormalise || !mot_de_passe) {
+      return res.status(400).json({
+        message: 'Nom, email et mot de passe sont requis'
+      });
+    }
+
+    if (!isValidEmail(emailNormalise)) {
+      return res.status(400).json({
+        message: 'Format d’email invalide'
+      });
+    }
+
+    if (String(mot_de_passe).length < 6) {
+      return res.status(400).json({
+        message: 'Le mot de passe doit contenir au moins 6 caractères'
+      });
+    }
 
     // Vérifier si l'email existe déjà en base.
     const existe = await Utilisateur.findOne({ where: { email: emailNormalise } });
@@ -34,10 +54,25 @@ exports.register = async (req, res) => {
       mot_de_passe: hash
     });
 
-    // Envoyer une réponse 201 pour indiquer la création réussie.
+    // Générer un token JWT immédiatement après la création du compte.
+    const token = jwt.sign(
+      {
+        id: utilisateur.id,
+        nom: utilisateur.nom
+      },
+      getJwtSecret(),
+      {
+        expiresIn: '7d'
+      }
+    );
+
+    // Ne jamais renvoyer le mot de passe dans la réponse.
+    const { mot_de_passe: _password, ...profil } = utilisateur.toJSON();
+
     res.status(201).json({
       message: 'Compte créé avec succès',
-      utilisateur
+      token,
+      utilisateur: profil
     });
 
   } catch (error) {
@@ -55,9 +90,19 @@ exports.login = async (req, res) => {
   try {
     // Lire les identifiants envoyés par le client.
     const { email, mot_de_passe } = req.body;
+    const emailNormalise = (email || '').trim().toLowerCase();
 
-    // Normaliser l'email avant recherche pour éviter les différences de casse.
-    const emailNormalise = email.trim().toLowerCase();
+    if (!emailNormalise || !mot_de_passe) {
+      return res.status(400).json({
+        message: 'Email et mot de passe sont requis'
+      });
+    }
+
+    if (!isValidEmail(emailNormalise)) {
+      return res.status(400).json({
+        message: 'Format d’email invalide'
+      });
+    }
 
     // Chercher l'utilisateur par email dans la base.
     const utilisateur = await Utilisateur.findOne({
@@ -88,17 +133,19 @@ exports.login = async (req, res) => {
         id: utilisateur.id,
         nom: utilisateur.nom
       },
-      process.env.JWT_SECRET,
+      getJwtSecret(),
       {
         expiresIn: '7d'
       }
     );
 
-    // Retourner le token et les informations de l'utilisateur.
+    // Retourner le token et les informations publiques de l'utilisateur.
+    const { mot_de_passe: _password, ...profil } = utilisateur.toJSON();
+
     res.json({
       message: 'Connexion réussie',
       token,
-      utilisateur
+      utilisateur: profil
     });
 
   } catch (error) {

@@ -1,5 +1,6 @@
 const { Categorie, Operation } = require('../models/index');
 
+// Retourne toutes les catégories personnalisées de l'utilisateur connecté.
 exports.getAll = async (req, res) => {
   try {
     const categories = await Categorie.findAll({
@@ -11,6 +12,7 @@ exports.getAll = async (req, res) => {
   }
 };
 
+// Ajoute une nouvelle catégorie personnalisée.
 exports.create = async (req, res) => {
   try {
     const { nom, icone } = req.body;
@@ -24,6 +26,7 @@ exports.create = async (req, res) => {
   }
 };
 
+// Modifie le nom ou l'icône d'une catégorie existante.
 exports.update = async (req, res) => {
   try {
     const categorie = await Categorie.findOne({
@@ -47,6 +50,7 @@ exports.update = async (req, res) => {
   }
 };
 
+// Supprime une catégorie si elle n'est utilisée par aucune opération.
 exports.remove = async (req, res) => {
   try {
     const categorie = await Categorie.findOne({
@@ -68,6 +72,7 @@ exports.remove = async (req, res) => {
   }
 };
 
+// Fusionne deux catégories en une seule pour éviter la duplication.
 exports.fusionner = async (req, res) => {
   try {
     const { categorieSourceId, categorieCibleId } = req.body;

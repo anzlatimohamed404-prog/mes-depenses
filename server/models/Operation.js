@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db');
 
+// Modèle représentant une opération financière enregistrée par l'utilisateur.
 const Operation = sequelize.define('Operation', {
   id: {
     type: DataTypes.INTEGER,

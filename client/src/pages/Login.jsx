@@ -3,12 +3,15 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import axios from '../utils/axios';
 
+// Page de connexion du projet.
+// Elle permet à l'utilisateur d'entrer ses identifiants et d'obtenir un accès sécurisé.
 const Login = () => {
   const { login } = useApp();
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', mot_de_passe: '' });
   const [erreur, setErreur] = useState('');
 
+  // Envoie les identifiants au backend et connecte l'utilisateur si les informations sont valides.
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -21,19 +24,33 @@ const Login = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h1 style={styles.title}>💸 Mes Dépenses</h1>
-        <h2 style={styles.subtitle}>Connexion</h2>
-        {erreur && <p style={styles.erreur}>{erreur}</p>}
+    <div className="auth-page">
+      <div className="auth-card">
+        <h1 className="auth-title">💸 Mes Dépenses</h1>
+        <p className="auth-subtitle">Connexion</p>
+        {erreur && <p className="error-text">{erreur}</p>}
         <form onSubmit={handleSubmit}>
-          <input style={styles.input} type="email" placeholder="Email"
-            value={form.email} onChange={e => setForm({...form, email: e.target.value})} required />
-          <input style={styles.input} type="password" placeholder="Mot de passe"
-            value={form.mot_de_passe} onChange={e => setForm({...form, mot_de_passe: e.target.value})} required />
-          <button style={styles.btn} type="submit">Se connecter</button>
+          <input
+            className="auth-input"
+            type="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={e => setForm({ ...form, email: e.target.value })}
+            required
+          />
+          <input
+            className="auth-input"
+            type="password"
+            placeholder="Mot de passe"
+            value={form.mot_de_passe}
+            onChange={e => setForm({ ...form, mot_de_passe: e.target.value })}
+            required
+          />
+          <button className="btn-submit" type="submit">Se connecter</button>
         </form>
-        <p style={styles.link}>Pas de compte ? <Link to="/register">S'inscrire</Link></p>
+        <p className="auth-link">
+          Pas de compte ? <Link to="/register">S'inscrire</Link>
+        </p>
       </div>
     </div>
   );

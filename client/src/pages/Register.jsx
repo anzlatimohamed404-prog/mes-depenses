@@ -2,11 +2,14 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from '../utils/axios';
 
+// Page d'inscription du projet.
+// Elle permet à un nouvel utilisateur de créer un compte pour accéder à l'application.
 const Register = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({ nom: '', email: '', mot_de_passe: '' });
   const [erreur, setErreur] = useState('');
 
+  // Envoie les informations du nouvel utilisateur vers l'API pour création du compte.
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -18,21 +21,41 @@ const Register = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h1 style={styles.title}>💸 Mes Dépenses</h1>
-        <h2 style={styles.subtitle}>Créer un compte</h2>
-        {erreur && <p style={styles.erreur}>{erreur}</p>}
+    <div className="auth-page">
+      <div className="auth-card">
+        <h1 className="auth-title">💸 Mes Dépenses</h1>
+        <p className="auth-subtitle">Créer un compte</p>
+        {erreur && <p className="error-text">{erreur}</p>}
         <form onSubmit={handleSubmit}>
-          <input style={styles.input} type="text" placeholder="Nom"
-            value={form.nom} onChange={e => setForm({...form, nom: e.target.value})} required />
-          <input style={styles.input} type="email" placeholder="Email"
-            value={form.email} onChange={e => setForm({...form, email: e.target.value})} required />
-          <input style={styles.input} type="password" placeholder="Mot de passe"
-            value={form.mot_de_passe} onChange={e => setForm({...form, mot_de_passe: e.target.value})} required />
-          <button style={styles.btn} type="submit">S'inscrire</button>
+          <input
+            className="auth-input"
+            type="text"
+            placeholder="Nom"
+            value={form.nom}
+            onChange={e => setForm({ ...form, nom: e.target.value })}
+            required
+          />
+          <input
+            className="auth-input"
+            type="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={e => setForm({ ...form, email: e.target.value })}
+            required
+          />
+          <input
+            className="auth-input"
+            type="password"
+            placeholder="Mot de passe"
+            value={form.mot_de_passe}
+            onChange={e => setForm({ ...form, mot_de_passe: e.target.value })}
+            required
+          />
+          <button className="btn-submit" type="submit">S'inscrire</button>
         </form>
-        <p style={styles.link}>Déjà un compte ? <Link to="/login">Se connecter</Link></p>
+        <p className="auth-link">
+          Déjà un compte ? <Link to="/login">Se connecter</Link>
+        </p>
       </div>
     </div>
   );

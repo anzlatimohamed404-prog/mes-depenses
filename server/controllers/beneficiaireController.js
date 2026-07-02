@@ -1,5 +1,6 @@
 const { Beneficiaire } = require('../models/index');
 
+// Récupère tous les bénéficiaires appartenant à l'utilisateur connecté.
 exports.getAll = async (req, res) => {
   try {
     const beneficiaires = await Beneficiaire.findAll({
@@ -11,6 +12,7 @@ exports.getAll = async (req, res) => {
   }
 };
 
+// Crée un nouveau bénéficiaire lié à un utilisateur.
 exports.create = async (req, res) => {
   try {
     const { nom, pays, devise, relation } = req.body;
@@ -24,6 +26,7 @@ exports.create = async (req, res) => {
   }
 };
 
+// Met à jour les informations d'un bénéficiaire existant.
 exports.update = async (req, res) => {
   try {
     const beneficiaire = await Beneficiaire.findOne({
@@ -37,6 +40,7 @@ exports.update = async (req, res) => {
   }
 };
 
+// Supprime un bénéficiaire après vérification de son appartenance à l'utilisateur.
 exports.remove = async (req, res) => {
   try {
     const beneficiaire = await Beneficiaire.findOne({

@@ -4,6 +4,8 @@ const Operation = require('./Operation');
 const TauxChange = require('./TauxChange');
 const Categorie = require('./Categorie');
 
+// Définition des relations entre les modèles Sequelize.
+// Un utilisateur possède plusieurs bénéficiaires, opérations, catégories et taux de change.
 Utilisateur.hasMany(Beneficiaire, { foreignKey: 'utilisateur_id' });
 Beneficiaire.belongsTo(Utilisateur, { foreignKey: 'utilisateur_id' });
 

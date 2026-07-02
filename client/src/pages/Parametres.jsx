@@ -181,24 +181,31 @@ const Parametres = () => {
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.pageTitle}>Paramètres</h1>
+      <div style={styles.pageHeader}>
+        <div>
+          <p style={styles.eyebrow}>Configuration</p>
+          <h1 style={styles.pageTitle}>Paramètres</h1>
+        </div>
+      </div>
 
-      {/* SECTION THÈME */}
-      <div style={styles.section}>
+      <div style={styles.sectionCard}>
         <div style={styles.header}>
-          <h2 style={styles.title}>🎨 Apparence</h2>
+          <div>
+            <h2 style={styles.title}>🎨 Apparence</h2>
+            <p style={styles.sectionText}>Personnalise le thème et les couleurs de l’application.</p>
+          </div>
         </div>
         <div style={styles.formCard}>
           <button onClick={handleChangerCouleur} style={{...styles.btnAdd, background: couleur, marginBottom: '16px'}}>
             🎨 Changer la couleur
           </button>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{ fontSize: '14px', color: 'var(--text)' }}>☀️ Mode clair</span>
+          <div style={styles.themeSwitchRow}>
+            <span style={styles.themeLabel}>☀️ Mode clair</span>
             <div
               onClick={handleToggleTheme}
               style={{
                 width: '52px', height: '28px', borderRadius: '14px',
-                background: isDark ? 'var(--primary-color)' : '#ddd',
+                background: isDark ? 'var(--primary-color)' : '#dbeafe',
                 cursor: 'pointer', position: 'relative',
                 transition: 'background 0.3s', flexShrink: 0
               }}
@@ -211,51 +218,39 @@ const Parametres = () => {
                 boxShadow: '0 1px 3px rgba(0,0,0,0.3)'
               }} />
             </div>
-            <span style={{ fontSize: '14px', color: 'var(--text)' }}>🌙 Mode sombre</span>
+            <span style={styles.themeLabel}>🌙 Mode sombre</span>
           </div>
         </div>
       </div>
 
-      {/* SECTION PROFIL */}
-      <div style={styles.section}>
+      <div style={styles.sectionCard}>
         <div style={styles.header}>
-          <h2 style={styles.title}>👤 Mon profil</h2>
+          <div>
+            <h2 style={styles.title}>👤 Mon profil</h2>
+            <p style={styles.sectionText}>Gère vos informations personnelles et votre photo.</p>
+          </div>
         </div>
 
-        {/* AVATAR */}
         <div style={styles.formCard}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
-            <div style={{
-              width: '72px', height: '72px', borderRadius: '50%',
-              background: user?.avatar ? 'transparent' : '#E6F1FB',
-              overflow: 'hidden', display: 'flex', alignItems: 'center',
-              justifyContent: 'center', flexShrink: 0,
-              border: '2px solid var(--primary-color)'
-            }}>
+          <div style={styles.profileRow}>
+            <div style={styles.avatarBox}>
               {user?.avatar ? (
                 <img src={user.avatar} alt="avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               ) : (
-                <span style={{ fontSize: '28px', fontWeight: '700', color: 'var(--primary-color)' }}>
+                <span style={styles.avatarInitial}>
                   {user?.nom?.charAt(0)?.toUpperCase()}
                 </span>
               )}
             </div>
             <div>
-              <p style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text)', marginBottom: '6px' }}>
-                {user?.nom}
-              </p>
-              <label style={{
-                background: 'var(--primary-color)', color: 'white',
-                padding: '8px 14px', borderRadius: '8px',
-                cursor: 'pointer', fontSize: '13px', display: 'inline-block'
-              }}>
+              <p style={styles.profileName}>{user?.nom}</p>
+              <label style={styles.avatarBtn}>
                 📷 Changer la photo
                 <input type="file" accept="image/*" onChange={handleAvatarChange} style={{ display: 'none' }} />
               </label>
             </div>
           </div>
 
-          {/* Formulaire profil */}
           <form onSubmit={handleUpdateProfile}>
             <div className="params-form-grid-2">
               <div>
@@ -270,11 +265,10 @@ const Parametres = () => {
               </div>
             </div>
             <button style={{...styles.btnSubmit, marginTop: '16px', width: '100%'}} type="submit">Mettre à jour</button>
-            {msgProfil && <p style={{marginTop: '10px', fontSize: '13px', color: 'var(--text)'}}>{msgProfil}</p>}
+            {msgProfil && <p style={styles.message}>{msgProfil}</p>}
           </form>
         </div>
 
-        {/* Changer mot de passe */}
         <div style={styles.formCard}>
           <h2 style={styles.formTitle}>Changer le mot de passe</h2>
           <form onSubmit={handleChangePassword}>
@@ -291,15 +285,17 @@ const Parametres = () => {
               </div>
             </div>
             <button style={{...styles.btnSubmit, marginTop: '16px', width: '100%'}} type="submit">Changer le mot de passe</button>
-            {msgPwd && <p style={{marginTop: '10px', fontSize: '13px', color: 'var(--text)'}}>{msgPwd}</p>}
+            {msgPwd && <p style={styles.message}>{msgPwd}</p>}
           </form>
         </div>
       </div>
 
-      {/* SECTION CATÉGORIES */}
-      <div style={styles.section}>
+      <div style={styles.sectionCard}>
         <div style={styles.header}>
-          <h2 style={styles.title}>📂 Gestion des catégories</h2>
+          <div>
+            <h2 style={styles.title}>📂 Gestion des catégories</h2>
+            <p style={styles.sectionText}>Organise et regroupe vos catégories de dépenses.</p>
+          </div>
           <button onClick={() => setShowCatForm(!showCatForm)} style={styles.btnAdd}>
             {showCatForm ? '✕' : '+ Catégorie'}
           </button>
@@ -369,10 +365,12 @@ const Parametres = () => {
         )}
       </div>
 
-      {/* SECTION TAUX DE CHANGE */}
-      <div style={styles.section}>
+      <div style={styles.sectionCard}>
         <div style={styles.header}>
-          <h2 style={styles.title}>💱 Taux de change</h2>
+          <div>
+            <h2 style={styles.title}>💱 Taux de change</h2>
+            <p style={styles.sectionText}>Ajoute ou modifie les taux de conversion selon les pays.</p>
+          </div>
           <button onClick={() => setShowForm(!showForm)} style={styles.btnAdd}>
             {showForm ? '✕' : '+ Taux'}
           </button>
@@ -431,37 +429,48 @@ const Parametres = () => {
 
 const styles = {
   container: { padding: '16px', maxWidth: '900px', margin: '0 auto' },
-  pageTitle: { fontSize: '24px', fontWeight: '700', color: 'var(--primary-color)', marginBottom: '24px' },
-  section: { marginBottom: '32px' },
+  pageHeader: { marginBottom: '24px' },
+  eyebrow: { fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.16em', color: 'var(--text-secondary)', marginBottom: '4px' },
+  pageTitle: { fontSize: '24px', fontWeight: '700', color: 'var(--primary-color)', margin: 0 },
+  sectionCard: { background: 'var(--bg-card)', borderRadius: '18px', padding: '18px', marginBottom: '20px', boxShadow: 'var(--shadow)', border: '1px solid var(--border)' },
   header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' },
-  title: { fontSize: '18px', fontWeight: '700', color: 'var(--primary-color)' },
-  btnAdd: { background: 'var(--primary-color)', color: 'white', border: 'none', padding: '10px 18px', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', whiteSpace: 'nowrap' },
-  formCard: { background: 'var(--bg-card)', borderRadius: '12px', padding: '16px', marginBottom: '20px', boxShadow: 'var(--shadow)' },
+  title: { fontSize: '18px', fontWeight: '700', color: 'var(--primary-color)', margin: 0 },
+  sectionText: { fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' },
+  btnAdd: { background: 'linear-gradient(135deg, var(--primary-color) 0%, #1d4ed8 100%)', color: 'white', border: 'none', padding: '10px 16px', borderRadius: '999px', cursor: 'pointer', fontSize: '14px', fontWeight: '600', whiteSpace: 'nowrap' },
+  formCard: { background: 'var(--bg-card)', borderRadius: '14px', padding: '16px', marginBottom: '16px', border: '1px solid var(--border)' },
   formTitle: { fontSize: '16px', fontWeight: '600', marginBottom: '16px', color: 'var(--text)' },
   inlineForm: { display: 'flex', gap: '10px', flexWrap: 'wrap' },
   label: { fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' },
-  input: { width: '100%', padding: '9px', borderRadius: '8px', border: '1px solid var(--border)', fontSize: '14px', boxSizing: 'border-box', background: 'var(--input-bg)', color: 'var(--text)' },
-  btnSubmit: { padding: '9px 18px', background: 'var(--primary-color)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', whiteSpace: 'nowrap' },
-  list: { background: 'var(--bg-card)', borderRadius: '12px', padding: '8px 16px', boxShadow: 'var(--shadow)' },
+  input: { width: '100%', padding: '10px 12px', borderRadius: '12px', border: '1px solid var(--border)', fontSize: '14px', boxSizing: 'border-box', background: 'var(--input-bg)', color: 'var(--text)' },
+  btnSubmit: { padding: '10px 16px', background: 'linear-gradient(135deg, var(--primary-color) 0%, #1d4ed8 100%)', color: 'white', border: 'none', borderRadius: '12px', cursor: 'pointer', fontSize: '14px', fontWeight: '600', whiteSpace: 'nowrap' },
+  list: { background: 'var(--bg-card)', borderRadius: '14px', padding: '8px 16px', border: '1px solid var(--border)' },
   catItem: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid var(--border)' },
   catLeft: { display: 'flex', gap: '12px', alignItems: 'center', flex: 1 },
   catIcon: { fontSize: '22px', flexShrink: 0 },
   catNom: { fontSize: '14px', fontWeight: '600', color: 'var(--text)' },
   catSub: { fontSize: '12px', color: 'var(--text-secondary)' },
   catActions: { display: 'flex', gap: '8px', flexShrink: 0 },
-  editInput: { padding: '6px 10px', borderRadius: '6px', border: '1px solid var(--primary-color)', fontSize: '14px', width: '100%', background: 'var(--input-bg)', color: 'var(--text)' },
-  btnEdit: { background: '#E6F1FB', color: 'var(--primary-color)', border: 'none', padding: '6px 10px', borderRadius: '6px', cursor: 'pointer', fontSize: '14px' },
-  btnSave: { background: 'var(--primary-color)', color: 'white', border: 'none', padding: '6px 10px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' },
-  btnCancel: { background: 'none', border: '1px solid var(--border)', padding: '6px 10px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', color: 'var(--text)' },
-  fusionBox: { background: 'var(--bg-card)', borderRadius: '12px', padding: '16px', marginTop: '12px', boxShadow: 'var(--shadow)' },
+  editInput: { padding: '6px 10px', borderRadius: '8px', border: '1px solid var(--primary-color)', fontSize: '14px', width: '100%', background: 'var(--input-bg)', color: 'var(--text)' },
+  btnEdit: { background: 'var(--primary-soft)', color: 'var(--primary-color)', border: 'none', padding: '6px 10px', borderRadius: '8px', cursor: 'pointer', fontSize: '14px' },
+  btnSave: { background: 'var(--primary-color)', color: 'white', border: 'none', padding: '6px 10px', borderRadius: '8px', cursor: 'pointer', fontSize: '12px' },
+  btnCancel: { background: 'none', border: '1px solid var(--border)', padding: '6px 10px', borderRadius: '8px', cursor: 'pointer', fontSize: '12px', color: 'var(--text)' },
+  fusionBox: { background: 'var(--primary-soft)', borderRadius: '14px', padding: '16px', marginTop: '12px', border: '1px solid rgba(37,99,235,0.12)' },
   fusionTitle: { fontSize: '14px', fontWeight: '600', color: 'var(--text)', marginBottom: '10px' },
   tauxItem: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 0', borderBottom: '1px solid var(--border)', flexWrap: 'wrap', gap: '8px' },
   tauxPays: { fontSize: '15px', fontWeight: '600', color: 'var(--text)' },
   tauxDevise: { fontSize: '12px', color: 'var(--text-secondary)' },
   tauxRight: { textAlign: 'right' },
   tauxValeur: { fontSize: '14px', fontWeight: '600', color: 'var(--primary-color)', marginBottom: '6px' },
-  btnDel: { background: 'none', border: '1px solid #A32D2D', color: '#A32D2D', padding: '5px 10px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' },
-  empty: { textAlign: 'center', color: 'var(--text-secondary)', padding: '20px' }
+  btnDel: { background: 'var(--danger-soft)', border: 'none', color: 'var(--danger-color)', padding: '6px 10px', borderRadius: '8px', cursor: 'pointer', fontSize: '12px' },
+  empty: { textAlign: 'center', color: 'var(--text-secondary)', padding: '20px' },
+  themeSwitchRow: { display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' },
+  themeLabel: { fontSize: '14px', color: 'var(--text)' },
+  profileRow: { display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px', flexWrap: 'wrap' },
+  avatarBox: { width: '74px', height: '74px', borderRadius: '50%', background: 'var(--primary-soft)', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '2px solid var(--primary-color)' },
+  avatarInitial: { fontSize: '28px', fontWeight: '700', color: 'var(--primary-color)' },
+  profileName: { fontSize: '14px', fontWeight: '700', color: 'var(--text)', marginBottom: '8px' },
+  avatarBtn: { background: 'linear-gradient(135deg, var(--primary-color) 0%, #1d4ed8 100%)', color: 'white', padding: '8px 14px', borderRadius: '999px', cursor: 'pointer', fontSize: '13px', display: 'inline-block' },
+  message: { marginTop: '10px', fontSize: '13px', color: 'var(--text)' }
 };
 
 export default Parametres;

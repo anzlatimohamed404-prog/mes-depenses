@@ -4,9 +4,10 @@ import { Link } from 'react-router-dom';
 import axios from '../utils/axios';
 
 const Dashboard = () => {
-  const { stats, operations, beneficiaires, taux, fetchStats, fetchOperations } = useApp();
+  const { user, stats, operations, beneficiaires, taux, fetchStats, fetchOperations } = useApp();
 
   const [showQuickForm, setShowQuickForm] = useState(false);
+  const [showAllRecentOps, setShowAllRecentOps] = useState(false);
   const [selectedBeneId, setSelectedBeneId] = useState('');
   const [montant, setMontant] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
@@ -59,9 +60,19 @@ const Dashboard = () => {
     }
   };
 
+  const userName = user?.nom || user?.email || 'Utilisateur';
+  const visibleRecentOperations = showAllRecentOps ? operations : operations.slice(0, 3);
+
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>Tableau de bord</h1>
+      <div style={styles.heroCard}>
+        <div>
+          <p style={styles.eyebrow}>Accueil</p>
+          <h1 style={styles.title}>Bonjour, {userName}</h1>
+          <p style={styles.subtitle}>Voici un aperçu rapide de vos dépenses et opérations récentes.</p>
+        </div>
+        <div style={styles.avatarBadge}>{userName?.charAt(0)?.toUpperCase() || 'U'}</div>
+      </div>
 
       {/* STATS */}
       <div className="dashboard-grid">
@@ -89,7 +100,7 @@ const Dashboard = () => {
           <h2 style={styles.sectionTitle}>Dernières opérations</h2>
           <Link to="/operations" style={styles.seeAll}>Voir tout</Link>
         </div>
-        {operations.slice(0, 5).map(op => (
+        {visibleRecentOperations.map(op => (
           <div key={op.id} style={styles.opItem}>
             <div>
               <p style={styles.opNom}>{op.Beneficiaire?.nom || op.categorie}</p>
@@ -106,6 +117,11 @@ const Dashboard = () => {
             </div>
           </div>
         ))}
+        {operations.length > 3 && (
+          <button onClick={() => setShowAllRecentOps(!showAllRecentOps)} style={styles.showMoreBtn}>
+            {showAllRecentOps ? 'Voir moins' : 'Voir plus'}
+          </button>
+        )}
         {operations.length === 0 && <p style={styles.empty}>Aucune opération</p>}
       </div>
 
@@ -157,21 +173,45 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/* BOUTON FLOTTANT */}
       <button
-        onClick={() => setShowQuickForm(!showQuickForm)}
-        style={styles.btnFlottant}
-        title="Nouvelle opération rapide"
-      >
-        {showQuickForm ? '✕' : '+'}
-      </button>
+  onClick={() => setShowQuickForm(!showQuickForm)}
+  style={styles.btnFlottant}
+>
+  {showQuickForm ? '✕ Fermer' : '+ Faire une opération'}
+</button>
     </div>
   );
 };
 
 const styles = {
   container: { padding: '16px', maxWidth: '900px', margin: '0 auto' },
-  title: { fontSize: '22px', fontWeight: '700', color: 'var(--primary-color)', marginBottom: '20px' },
+  heroCard: {
+    background: 'linear-gradient(135deg, var(--primary-color) 0%, #1d4ed8 100%)',
+    color: 'white',
+    borderRadius: '18px',
+    padding: '20px 22px',
+    marginBottom: '20px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: '16px',
+    boxShadow: '0 16px 36px rgba(37, 99, 235, 0.2)'
+  },
+  eyebrow: { fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.18em', opacity: 0.8, marginBottom: '6px' },
+  title: { fontSize: '22px', fontWeight: '700', color: 'white', marginBottom: '6px' },
+  subtitle: { fontSize: '14px', opacity: 0.9, lineHeight: 1.5 },
+  avatarBadge: {
+    width: '48px',
+    height: '48px',
+    borderRadius: '50%',
+    background: 'rgba(255,255,255,0.2)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '20px',
+    fontWeight: '700',
+    flexShrink: 0
+  },
   card: { background: 'var(--bg-card)', padding: '16px', borderRadius: '12px', boxShadow: 'var(--shadow)' },
   label: { fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '6px', display: 'block' },
   value: { fontSize: '20px', fontWeight: '700', color: 'var(--primary-color)' },
@@ -186,6 +226,7 @@ const styles = {
   opRight: { textAlign: 'right', flexShrink: 0, marginLeft: '8px' },
   opMontant: { fontSize: '15px', fontWeight: '700', color: 'var(--primary-color)' },
   opDevise: { fontSize: '12px', color: 'var(--text-secondary)' },
+  showMoreBtn: { marginTop: '10px', width: '100%', padding: '10px 12px', background: 'var(--primary-soft)', color: 'var(--primary-color)', border: 'none', borderRadius: '10px', cursor: 'pointer', fontSize: '13px', fontWeight: '600' },
   empty: { textAlign: 'center', color: 'var(--text-secondary)', padding: '20px' },
   quickFormOverlay: {
     position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
@@ -207,14 +248,15 @@ const styles = {
   conversion: { background: '#E6F1FB', borderRadius: '8px', padding: '10px', marginBottom: '12px' },
   conversionValue: { fontSize: '16px', fontWeight: '700', color: 'var(--primary-color)' },
   btnFlottant: {
-    position: 'fixed', bottom: '30px', right: '30px',
-    width: '60px', height: '60px', borderRadius: '50%',
-    background: 'var(--primary-color)', color: 'white',
-    border: 'none', fontSize: '32px', cursor: 'pointer',
-    boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    zIndex: 999, lineHeight: 1
-  }
+  position: 'fixed', bottom: '30px', right: '30px',
+  background: 'var(--primary-color)', color: 'white',
+  border: 'none', fontSize: '15px', fontWeight: '600',
+  cursor: 'pointer', padding: '14px 20px',
+  boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
+  display: 'flex', alignItems: 'center', gap: '8px',
+  zIndex: 999, borderRadius: '30px'
+},
+
 };
 
 export default Dashboard;

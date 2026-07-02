@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db');
 
+// Modèle représentant une catégorie personnalisée utilisée pour classer les dépenses.
 const Categorie = sequelize.define('Categorie', {
   id: {
     type: DataTypes.INTEGER,

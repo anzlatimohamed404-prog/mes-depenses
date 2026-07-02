@@ -1,17 +1,23 @@
 :root {
-  --primary-color: #0C447C;
+  --primary-color: #2563eb;
+  --primary-dark: #113f7d;
+  --accent-color: #14b8a6;
+  --accent-soft: #e7fbf8;
+  --success-color: #16a34a;
+  --danger-color: #ef4444;
+  --danger-soft: #fef2f2;
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
 
   /* MODE CLAIR (défaut) */
-  --bg: #f0f2f5;
+  --bg: #f5f9ff;
   --bg-card: #ffffff;
-  --text: #333333;
-  --text-secondary: #888888;
-  --border: #e5e4e7;
-  --input-bg: #ffffff;
-  --shadow: 0 2px 8px rgba(0,0,0,0.08);
+  --text: #14213d;
+  --text-secondary: #64748b;
+  --border: #dce7f4;
+  --input-bg: #f8fbff;
+  --shadow: 0 14px 35px rgba(37, 99, 235, 0.08);
 
   font: 16px/145% var(--sans);
   letter-spacing: 0.18px;
@@ -24,13 +30,13 @@
 
 /* MODE SOMBRE */
 [data-theme="dark"] {
-  --bg: #1a1a2e;
-  --bg-card: #16213e;
-  --text: #e0e0e0;
-  --text-secondary: #aaaaaa;
-  --border: #2e2e4e;
-  --input-bg: #0f3460;
-  --shadow: 0 2px 8px rgba(0,0,0,0.3);
+  --bg: #0f172a;
+  --bg-card: #162033;
+  --text: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --border: #334155;
+  --input-bg: #111827;
+  --shadow: 0 16px 38px rgba(0,0,0,0.28);
 }
 
 html, body {

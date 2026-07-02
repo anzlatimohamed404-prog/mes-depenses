@@ -9,16 +9,23 @@ import Beneficiaires from './pages/Beneficiaires';
 import Parametres from './pages/Parametres';
 import Navbar from './components/Navbar';
 
+// Ce composant protège les pages sensibles : si l'utilisateur n'est pas connecté,
+// il est automatiquement redirigé vers la page de connexion.
 const PrivateRoute = ({ children }) => {
   const { token } = useApp();
   return token ? children : <Navigate to="/login" />;
 };
 
+// Point d'entrée principal de l'application React.
+// Il définit la navigation entre les différentes pages du projet.
 const App = () => {
   return (
     <Routes>
+      {/* Page de connexion accessible sans authentification */}
       <Route path="/login" element={<Login />} />
+      {/* Page d'inscription accessible sans authentification */}
       <Route path="/register" element={<Register />} />
+      {/* Page d'accueil protégée : seule une personne connectée peut y accéder */}
       <Route path="/" element={
         <PrivateRoute>
           <Navbar />

@@ -1,16 +1,18 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import axios from '../utils/axios';
 
-// Création du contexte global de l'application
+// Création du contexte global de l'application.
+// Il permet de partager les données utilisateur et les fonctions utiles dans toute l'interface.
 const AppContext = createContext();
 
-// Fournisseur du contexte qui encapsule toute l'application
+// Fournisseur du contexte qui encapsule toute l'application.
+// Toutes les pages peuvent accéder aux mêmes données sans les transmettre manuellement.
 export const AppProvider = ({ children }) => {
 
-  // Informations de l'utilisateur connecté
+  // Informations de l'utilisateur actuellement connecté.
   const [user, setUser] = useState(null);
 
-  // Récupération du token enregistré dans le navigateur
+  // Token d'authentification stocké dans le navigateur pour garder la session ouverte.
   const [token, setToken] = useState(localStorage.getItem('token') || null);
 
   // Liste des opérations financières

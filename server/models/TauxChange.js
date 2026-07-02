@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db');
 
+// Modèle représentant un taux de change défini pour un pays et une devise.
 const TauxChange = sequelize.define('TauxChange', {
   id: {
     type: DataTypes.INTEGER,

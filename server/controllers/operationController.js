@@ -1,5 +1,6 @@
 const { Operation, Beneficiaire } = require('../models/index');
 
+// Récupère la liste des opérations selon les filtres envoyés par le client.
 exports.getAll = async (req, res) => {
   try {
     const { beneficiaire_id, annee, categorie } = req.query;
@@ -25,6 +26,7 @@ exports.getAll = async (req, res) => {
   }
 };
 
+// Crée une nouvelle opération financière liée à un utilisateur.
 exports.create = async (req, res) => {
   try {
     const { categorie, montant_eur, montant_devise, devise, date_envoi, note, beneficiaire_id } = req.body;
@@ -44,6 +46,7 @@ exports.create = async (req, res) => {
   }
 };
 
+// Supprime une opération si elle appartient bien à l'utilisateur connecté.
 exports.remove = async (req, res) => {
   try {
     const operation = await Operation.findOne({
@@ -57,6 +60,7 @@ exports.remove = async (req, res) => {
   }
 };
 
+// Calcule les statistiques globales affichées sur le tableau de bord.
 exports.getStats = async (req, res) => {
   try {
     const operations = await Operation.findAll({

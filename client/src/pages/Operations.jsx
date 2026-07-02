@@ -23,6 +23,7 @@ const Operations = () => {
   const [beneSearch, setBeneSearch] = useState('');
   const [montantDevise, setMontantDevise] = useState(0);
   const [showForm, setShowForm] = useState(false);
+  const [showAllOperations, setShowAllOperations] = useState(false);
 
   useEffect(() => {
     fetchOperations({ beneficiaire_id: filterBene, annee: filterAnnee });
@@ -108,11 +109,15 @@ const Operations = () => {
   );
 
   const isVirement = form.categorie === 'virement';
+  const visibleOperations = showAllOperations ? operations : operations.slice(0, 3);
 
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <h1 style={styles.title}>Opérations</h1>
+        <div>
+          <p style={styles.eyebrow}>Gestion</p>
+          <h1 style={styles.title}>Opérations</h1>
+        </div>
         <button onClick={() => setShowForm(!showForm)} style={styles.btnAdd}>
           {showForm ? '✕ Fermer' : '+ Nouvelle opération'}
         </button>
@@ -192,6 +197,10 @@ const Operations = () => {
       )}
 
       <div style={styles.beneList}>
+        <div style={styles.sectionTitleRow}>
+          <h2 style={styles.sectionTitle}>Bénéficiaires rapides</h2>
+          <span style={styles.sectionHint}>Sélectionne un destinataire</span>
+        </div>
         {beneficiaires.map(b => (
           <div key={b.id} className="operations-bene-row">
             <div style={styles.beneInfo}>
@@ -211,7 +220,7 @@ const Operations = () => {
         )}
       </div>
 
-      <div className="operations-filters">
+      <div className="operations-filters" style={styles.filtersBar}>
         <select
           style={styles.filterInput}
           value={filterBene}
@@ -240,7 +249,11 @@ const Operations = () => {
       </div>
 
       <div style={styles.list}>
-        {operations.map(op => (
+        <div style={styles.sectionTitleRow}>
+          <h2 style={styles.sectionTitle}>Historique</h2>
+          <span style={styles.sectionHint}>Dernières entrées enregistrées</span>
+        </div>
+        {visibleOperations.map(op => (
           <div key={op.id} style={styles.opItem}>
             <div style={styles.opLeft}>
               <div style={styles.avatar}>
@@ -263,6 +276,11 @@ const Operations = () => {
             </div>
           </div>
         ))}
+        {operations.length > 3 && (
+          <button onClick={() => setShowAllOperations(!showAllOperations)} style={styles.showMoreBtn}>
+            {showAllOperations ? 'Voir moins' : 'Voir plus'}
+          </button>
+        )}
         {operations.length === 0 && <p style={styles.empty}>Aucune opération</p>}
       </div>
     </div>
@@ -271,37 +289,43 @@ const Operations = () => {
 
 const styles = {
   container: { padding: '16px', maxWidth: '900px', margin: '0 auto' },
-  header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' },
-  title: { fontSize: '22px', fontWeight: '700', color: 'var(--primary-color)' },
-  btnAdd: { background: 'var(--primary-color)', color: 'white', border: 'none', padding: '10px 18px', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', whiteSpace: 'nowrap' },
-  formCard: { background: 'var(--bg-card)', borderRadius: '12px', padding: '16px', marginBottom: '20px', boxShadow: 'var(--shadow)' },
-  formTitle: { fontSize: '16px', fontWeight: '600', marginBottom: '16px', color: 'var(--text)' },
+  header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', gap: '12px', flexWrap: 'wrap' },
+  eyebrow: { fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.16em', color: 'var(--text-secondary)', marginBottom: '4px' },
+  title: { fontSize: '22px', fontWeight: '700', color: 'var(--primary-color)', margin: 0 },
+  btnAdd: { background: 'linear-gradient(135deg, var(--primary-color) 0%, #1d4ed8 100%)', color: 'white', border: 'none', padding: '10px 16px', borderRadius: '999px', cursor: 'pointer', fontSize: '14px', fontWeight: '600', whiteSpace: 'nowrap' },
+  formCard: { background: 'var(--bg-card)', borderRadius: '18px', padding: '18px', marginBottom: '20px', boxShadow: 'var(--shadow)', border: '1px solid var(--border)' },
+  formTitle: { fontSize: '16px', fontWeight: '700', marginBottom: '16px', color: 'var(--text)' },
   label: { fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' },
-  input: { width: '100%', padding: '9px', borderRadius: '8px', border: '1px solid var(--border)', fontSize: '14px', boxSizing: 'border-box', background: 'var(--input-bg)', color: 'var(--text)' },
-  dropdown: { position: 'absolute', top: '100%', left: 0, right: 0, background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '8px', marginTop: '4px', maxHeight: '180px', overflowY: 'auto', zIndex: 10, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' },
+  input: { width: '100%', padding: '10px 12px', borderRadius: '12px', border: '1px solid var(--border)', fontSize: '14px', boxSizing: 'border-box', background: 'var(--input-bg)', color: 'var(--text)' },
+  dropdown: { position: 'absolute', top: '100%', left: 0, right: 0, background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px', marginTop: '4px', maxHeight: '180px', overflowY: 'auto', zIndex: 10, boxShadow: '0 8px 18px rgba(0,0,0,0.08)' },
   dropdownItem: { padding: '10px 12px', fontSize: '13px', cursor: 'pointer', borderBottom: '1px solid var(--border)', color: 'var(--text)' },
   dropdownEmpty: { padding: '10px 12px', fontSize: '13px', color: 'var(--text-secondary)' },
-  conversion: { background: '#E6F1FB', borderRadius: '8px', padding: '10px' },
-  conversionValue: { fontSize: '18px', fontWeight: '700', color: 'var(--primary-color)' },
-  btnSubmit: { marginTop: '16px', width: '100%', padding: '11px', background: 'var(--primary-color)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '15px' },
-  beneList: { background: 'var(--bg-card)', borderRadius: '12px', padding: '8px 16px', marginBottom: '20px', boxShadow: 'var(--shadow)' },
+  conversion: { background: 'var(--accent-soft)', borderRadius: '12px', padding: '10px 12px', border: '1px solid rgba(20, 184, 166, 0.18)' },
+  conversionValue: { fontSize: '16px', fontWeight: '700', color: 'var(--primary-color)', marginTop: '4px' },
+  btnSubmit: { marginTop: '16px', width: '100%', padding: '11px 12px', background: 'linear-gradient(135deg, var(--primary-color) 0%, #1d4ed8 100%)', color: 'white', border: 'none', borderRadius: '12px', cursor: 'pointer', fontSize: '15px', fontWeight: '600' },
+  beneList: { background: 'var(--bg-card)', borderRadius: '18px', padding: '14px 16px', marginBottom: '20px', boxShadow: 'var(--shadow)', border: '1px solid var(--border)' },
+  sectionTitleRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', gap: '8px', flexWrap: 'wrap' },
+  sectionTitle: { fontSize: '15px', fontWeight: '700', color: 'var(--text)', margin: 0 },
+  sectionHint: { fontSize: '12px', color: 'var(--text-secondary)' },
   beneInfo: { display: 'flex', gap: '12px', alignItems: 'center' },
   beneNom: { fontSize: '14px', fontWeight: '600', color: 'var(--text)' },
   beneSub: { fontSize: '12px', color: 'var(--text-secondary)' },
-  btnEffectuer: { background: '#E6F1FB', color: 'var(--primary-color)', border: 'none', padding: '8px 14px', borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: '600', whiteSpace: 'nowrap' },
-  filterInput: { padding: '9px 12px', borderRadius: '8px', border: '1px solid var(--border)', fontSize: '13px', background: 'var(--bg-card)', color: 'var(--text)', cursor: 'pointer', minWidth: '180px' },
-  total: { fontSize: '14px', color: 'var(--text)', paddingTop: '8px' },
-  list: { background: 'var(--bg-card)', borderRadius: '12px', padding: '8px 16px', boxShadow: 'var(--shadow)' },
-  opItem: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid var(--border)' },
-  opLeft: { display: 'flex', gap: '12px', alignItems: 'center' },
-  avatar: { width: '38px', height: '38px', borderRadius: '50%', background: '#E6F1FB', color: 'var(--primary-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '16px', flexShrink: 0 },
+  btnEffectuer: { background: 'var(--primary-soft)', color: 'var(--primary-color)', border: 'none', padding: '8px 14px', borderRadius: '999px', cursor: 'pointer', fontSize: '13px', fontWeight: '600', whiteSpace: 'nowrap' },
+  filtersBar: { display: 'flex', gap: '12px', marginBottom: '16px', alignItems: 'center', flexWrap: 'wrap' },
+  filterInput: { padding: '9px 12px', borderRadius: '12px', border: '1px solid var(--border)', fontSize: '13px', background: 'var(--bg-card)', color: 'var(--text)', cursor: 'pointer', minWidth: '180px' },
+  total: { fontSize: '14px', color: 'var(--text)', paddingTop: '6px' },
+  list: { background: 'var(--bg-card)', borderRadius: '18px', padding: '14px 16px', boxShadow: 'var(--shadow)', border: '1px solid var(--border)' },
+  opItem: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid var(--border)', gap: '12px' },
+  opLeft: { display: 'flex', gap: '12px', alignItems: 'center', minWidth: 0 },
+  avatar: { width: '42px', height: '42px', borderRadius: '50%', background: 'var(--primary-soft)', color: 'var(--primary-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '16px', flexShrink: 0 },
   opNom: { fontSize: '14px', fontWeight: '600', color: 'var(--text)' },
   opInfo: { fontSize: '12px', color: 'var(--text-secondary)' },
-  opNote: { fontSize: '12px', color: 'var(--text-secondary)' },
+  opNote: { fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' },
   opRight: { textAlign: 'right', flexShrink: 0, marginLeft: '8px' },
   opMontant: { fontSize: '15px', fontWeight: '700', color: 'var(--primary-color)' },
   opDevise: { fontSize: '12px', color: 'var(--text-secondary)' },
-  btnDel: { background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px', marginTop: '4px' },
+  btnDel: { background: 'var(--danger-soft)', border: 'none', cursor: 'pointer', fontSize: '16px', marginTop: '4px', padding: '6px 8px', borderRadius: '10px' },
+  showMoreBtn: { marginTop: '10px', width: '100%', padding: '10px 12px', background: 'var(--primary-soft)', color: 'var(--primary-color)', border: 'none', borderRadius: '10px', cursor: 'pointer', fontSize: '13px', fontWeight: '600' },
   empty: { textAlign: 'center', color: 'var(--text-secondary)', padding: '30px' }
 };
 

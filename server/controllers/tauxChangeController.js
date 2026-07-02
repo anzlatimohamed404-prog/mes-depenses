@@ -1,5 +1,6 @@
 const { TauxChange } = require('../models/index');
 
+// Récupère les taux de change enregistrés par l'utilisateur.
 exports.getAll = async (req, res) => {
   try {
     const taux = await TauxChange.findAll({
@@ -11,6 +12,7 @@ exports.getAll = async (req, res) => {
   }
 };
 
+// Crée un nouveau taux de change pour un pays donné.
 exports.create = async (req, res) => {
   try {
     const { pays, devise, taux } = req.body;
@@ -24,6 +26,7 @@ exports.create = async (req, res) => {
   }
 };
 
+// Met à jour un taux existant.
 exports.update = async (req, res) => {
   try {
     const tauxChange = await TauxChange.findOne({
@@ -37,6 +40,7 @@ exports.update = async (req, res) => {
   }
 };
 
+// Supprime un taux de change enregistré.
 exports.remove = async (req, res) => {
   try {
     const tauxChange = await TauxChange.findOne({
@@ -50,6 +54,7 @@ exports.remove = async (req, res) => {
   }
 };
 
+// Actualise les taux à partir d'une API externe de devises.
 exports.actualiser = async (req, res) => {
   try {
     const taux = await TauxChange.findAll({ where: { utilisateur_id: req.utilisateur.id } });

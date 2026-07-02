@@ -1,6 +1,7 @@
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
+// Initialisation de Sequelize avec les informations de connexion à MySQL.
 const sequelize = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
@@ -13,6 +14,7 @@ const sequelize = new Sequelize(
   }
 );
 
+// Fonction de connexion à la base de données.
 const connectDB = async () => {
   try {
     await sequelize.authenticate();

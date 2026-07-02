@@ -16,7 +16,8 @@ const Register = () => {
       await axios.post('/auth/register', form);
       navigate('/login');
     } catch (error) {
-      setErreur('Erreur lors de la création du compte');
+      const message = error.response?.data?.message || error.message || 'Erreur lors de la création du compte';
+      setErreur(message === 'Network Error' ? 'Impossible de joindre le serveur' : message);
     }
   };
 

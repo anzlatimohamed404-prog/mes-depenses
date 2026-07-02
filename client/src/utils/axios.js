@@ -1,9 +1,11 @@
 import axios from 'axios';
 
-// Création d'une instance Axios personnalisée pour centraliser toutes les requêtes HTTP.
-// Cela simplifie la communication avec l'API backend du projet.
+// Base URL configurable : en dev on utilise le backend local, en prod on peut
+// injecter l'URL via la variable d'environnement VITE_API_URL.
+const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
 const instance = axios.create({
-  baseURL: 'https://mes-depenses-production.up.railway.app/api',
+  baseURL,
 });
 
 // Intercepteur qui ajoute automatiquement le token JWT à chaque requête.

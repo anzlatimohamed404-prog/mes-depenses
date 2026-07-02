@@ -19,7 +19,8 @@ const Login = () => {
       login(res.data.utilisateur, res.data.token);
       navigate('/');
     } catch (error) {
-      setErreur('Email ou mot de passe incorrect');
+      const message = error.response?.data?.message || error.message || 'Erreur de connexion';
+      setErreur(message === 'Network Error' ? 'Impossible de joindre le serveur' : message);
     }
   };
 

@@ -12,8 +12,33 @@ require('./models/index');
 // Création de l'application Express.
 const app = express();
 
-// Middleware pour autoriser les requêtes depuis le front-end.
-app.use(cors());
+// Origines autorisées pour les requêtes CORS.
+// Pour la production, ajouter l'URL du front déployé dans ALLOWED_ORIGINS si nécessaire.
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',')
+  : [
+      'http://localhost:5173',
+      'https://mes-depenses-production.up.railway.app'
+    ];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Autoriser les requêtes provenant du navigateur ou sans origine (ex: tests API).
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Origin non autorisée par CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 204
+};
+
+// Middleware CORS global, puis activation des réponses aux préflights OPTIONS.
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
+
 // Middleware pour lire les données JSON envoyées par le client.
 app.use(express.json());
 

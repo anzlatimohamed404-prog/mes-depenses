@@ -13,6 +13,7 @@ const Dashboard = () => {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [note, setNote] = useState('');
   const [montantDevise, setMontantDevise] = useState(0);
+  const [feedback, setFeedback] = useState('');
 
   useEffect(() => {
     fetchStats();
@@ -50,13 +51,14 @@ const Dashboard = () => {
       });
       fetchStats();
       fetchOperations();
+      setFeedback('Opération ajoutée avec succès.');
       setShowQuickForm(false);
       setSelectedBeneId('');
       setMontant('');
       setNote('');
       setMontantDevise(0);
     } catch (error) {
-      alert('Erreur lors de l\'ajout');
+      setFeedback('Erreur lors de l\'ajout.');
     }
   };
 
@@ -65,6 +67,8 @@ const Dashboard = () => {
 
   return (
     <div style={styles.container}>
+      {feedback && <p style={styles.feedback}>{feedback}</p>}
+
       <div style={styles.heroCard}>
         <div>
           <p style={styles.eyebrow}>Accueil</p>
@@ -185,6 +189,7 @@ const Dashboard = () => {
 
 const styles = {
   container: { padding: '16px', maxWidth: '900px', margin: '0 auto' },
+  feedback: { padding: '10px 12px', borderRadius: '10px', background: '#ecfdf5', color: '#047857', marginBottom: '12px', fontSize: '13px' },
   heroCard: {
     background: 'linear-gradient(135deg, var(--primary-color) 0%, #1d4ed8 100%)',
     color: 'white',

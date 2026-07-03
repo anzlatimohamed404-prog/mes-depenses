@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// Base URL configurable : en dev on utilise le backend local, en prod on peut
-// injecter l'URL via la variable d'environnement VITE_API_URL.
+// Base URL configurable : en local, on utilise le backend local
+// pour éviter les erreurs CORS et les déploiements distants non disponibles.
 const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 const instance = axios.create({

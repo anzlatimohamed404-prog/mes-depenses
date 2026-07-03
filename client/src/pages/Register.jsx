@@ -1,23 +1,53 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useApp } from '../context/AppContext';
 import axios from '../utils/axios';
+
+const isValidEmail = (value) => /\S+@\S+\.\S+/.test(value || '');
 
 // Page d'inscription du projet.
 // Elle permet à un nouvel utilisateur de créer un compte pour accéder à l'application.
 const Register = () => {
+  const { login } = useApp();
   const navigate = useNavigate();
   const [form, setForm] = useState({ nom: '', email: '', mot_de_passe: '' });
   const [erreur, setErreur] = useState('');
+  const [loading, setLoading] = useState(false);
 
   // Envoie les informations du nouvel utilisateur vers l'API pour création du compte.
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErreur('');
+
+    const nom = form.nom.trim();
+    const email = form.email.trim();
+    const password = form.mot_de_passe;
+
+    if (!nom || !email || !password) {
+      setErreur('Tous les champs sont requis.');
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      setErreur('Veuillez saisir un email valide.');
+      return;
+    }
+
+    if (password.length < 6) {
+      setErreur('Le mot de passe doit contenir au moins 6 caractères.');
+      return;
+    }
+
+    setLoading(true);
     try {
-      await axios.post('/auth/register', form);
-      navigate('/login');
+      const res = await axios.post('/auth/register', { nom, email, mot_de_passe: password });
+      login(res.data.utilisateur, res.data.token);
+      navigate('/');
     } catch (error) {
       const message = error.response?.data?.message || error.message || 'Erreur lors de la création du compte';
       setErreur(message === 'Network Error' ? 'Impossible de joindre le serveur' : message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -52,7 +82,9 @@ const Register = () => {
             onChange={e => setForm({ ...form, mot_de_passe: e.target.value })}
             required
           />
-          <button className="btn-submit" type="submit">S'inscrire</button>
+          <button className="btn-submit" type="submit" disabled={loading}>
+            {loading ? 'Création...' : "S'inscrire"}
+          </button>
         </form>
         <p className="auth-link">
           Déjà un compte ? <Link to="/login">Se connecter</Link>
@@ -60,17 +92,6 @@ const Register = () => {
       </div>
     </div>
   );
-};
-
-const styles = {
-  container: { minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0C447C', padding: '16px' },
-  card: { background: 'white', padding: '32px 24px', borderRadius: '16px', width: '100%', maxWidth: '360px', boxSizing: 'border-box' },
-  title: { textAlign: 'center', color: '#0C447C', marginBottom: '4px', fontSize: '24px', lineHeight: '1.2' },
-  subtitle: { textAlign: 'center', color: '#555', marginBottom: '24px', fontSize: '16px', marginTop: '4px' },
-  input: { width: '100%', padding: '10px', marginBottom: '12px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '14px', boxSizing: 'border-box' },
-  btn: { width: '100%', padding: '12px', background: '#0C447C', color: 'white', border: 'none', borderRadius: '8px', fontSize: '15px', cursor: 'pointer' },
-  erreur: { color: 'red', fontSize: '13px', marginBottom: '10px' },
-  link: { textAlign: 'center', marginTop: '16px', fontSize: '13px' }
 };
 
 export default Register;

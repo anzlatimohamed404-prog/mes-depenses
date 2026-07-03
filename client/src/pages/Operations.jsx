@@ -158,8 +158,14 @@ const Operations = () => {
                   {beneSearch && !form.beneficiaire_id && (
                     <div style={styles.dropdown}>
                       {beneficiairesFiltres.map(b => (
-                        <div key={b.id} style={styles.dropdownItem}
-                          onClick={() => { setForm({...form, beneficiaire_id: String(b.id)}); setBeneSearch(b.nom); }}>
+                        <div
+                          key={b.id}
+                          style={styles.dropdownItem}
+                          onClick={() => {
+                            setForm({ ...form, beneficiaire_id: String(b.id) });
+                            setBeneSearch(b.nom);
+                          }}
+                        >
                           {b.nom} — {b.pays}
                         </div>
                       ))}

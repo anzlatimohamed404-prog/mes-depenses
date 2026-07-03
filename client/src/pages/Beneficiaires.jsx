@@ -18,6 +18,8 @@ const Beneficiaires = () => {
   const [selected, setSelected] = useState(null);
   const [filterAnnee, setFilterAnnee] = useState('');
   const [form, setForm] = useState({ nom: '', pays: '', devise: '', relation: 'famille' });
+  const [feedback, setFeedback] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handlePaysChange = (pays) => {
     const p = PAYS.find(p => p.nom === pays);
@@ -26,24 +28,36 @@ const Beneficiaires = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setFeedback('');
+    if (!form.nom || !form.pays || !form.devise) {
+      setFeedback('Veuillez remplir le nom, le pays et la devise.');
+      return;
+    }
+
+    setLoading(true);
     try {
       await axios.post('/beneficiaires', form);
       fetchBeneficiaires();
       setForm({ nom: '', pays: '', devise: '', relation: 'famille' });
       setShowForm(false);
+      setFeedback('Bénéficiaire ajouté avec succès.');
     } catch (error) {
-      alert('Erreur lors de l\'ajout');
+      setFeedback('Erreur lors de l\'ajout.');
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
     if (!window.confirm('Supprimer ce bénéficiaire ?')) return;
+    setFeedback('');
     try {
       await axios.delete(`/beneficiaires/${id}`);
       fetchBeneficiaires();
       setSelected(null);
+      setFeedback('Bénéficiaire supprimé.');
     } catch (error) {
-      alert('Erreur lors de la suppression');
+      setFeedback('Erreur lors de la suppression.');
     }
   };
 
@@ -67,6 +81,8 @@ const Beneficiaires = () => {
           {showForm ? '✕ Fermer' : '+ Ajouter'}
         </button>
       </div>
+
+      {feedback && <p style={styles.feedback}>{feedback}</p>}
 
       {showForm && (
         <div style={styles.formCard}>
@@ -101,7 +117,9 @@ const Beneficiaires = () => {
                 </select>
               </div>
             </div>
-            <button style={styles.btnSubmit} type="submit">Enregistrer</button>
+            <button style={styles.btnSubmit} type="submit" disabled={loading}>
+              {loading ? 'Enregistrement...' : 'Enregistrer'}
+            </button>
           </form>
         </div>
       )}
@@ -170,6 +188,7 @@ const styles = {
   container: { padding: '16px', maxWidth: '900px', margin: '0 auto' },
   header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' },
   title: { fontSize: '22px', fontWeight: '700', color: 'var(--primary-color)' },
+  feedback: { padding: '10px 12px', borderRadius: '10px', background: '#ecfdf5', color: '#047857', marginBottom: '12px', fontSize: '13px' },
   btnAdd: { background: 'var(--primary-color)', color: 'white', border: 'none', padding: '10px 18px', borderRadius: '8px', cursor: 'pointer', fontSize: '14px' },
   formCard: { background: 'white', borderRadius: '12px', padding: '16px', marginBottom: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' },
   formTitle: { fontSize: '16px', fontWeight: '600', marginBottom: '16px', color: '#333' },

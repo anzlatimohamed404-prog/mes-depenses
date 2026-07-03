@@ -3,6 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import axios from '../utils/axios';
 
+const isValidEmail = (value) => /\S+@\S+\.\S+/.test(value || '');
+
 // Page de connexion du projet.
 // Elle permet à l'utilisateur d'entrer ses identifiants et d'obtenir un accès sécurisé.
 const Login = () => {
@@ -10,17 +12,39 @@ const Login = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', mot_de_passe: '' });
   const [erreur, setErreur] = useState('');
+  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   // Envoie les identifiants au backend et connecte l'utilisateur si les informations sont valides.
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErreur('');
+    setMessage('');
+
+    const email = form.email.trim();
+    const password = form.mot_de_passe;
+
+    if (!email || !password) {
+      setErreur('Veuillez remplir tous les champs.');
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      setErreur('Veuillez saisir un email valide.');
+      return;
+    }
+
+    setLoading(true);
     try {
-      const res = await axios.post('/auth/login', form);
+      const res = await axios.post('/auth/login', { email, mot_de_passe: password });
       login(res.data.utilisateur, res.data.token);
+      setMessage('Connexion réussie. Redirection...');
       navigate('/');
     } catch (error) {
       const message = error.response?.data?.message || error.message || 'Erreur de connexion';
       setErreur(message === 'Network Error' ? 'Impossible de joindre le serveur' : message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -30,6 +54,7 @@ const Login = () => {
         <h1 className="auth-title">💸 Mes Dépenses</h1>
         <p className="auth-subtitle">Connexion</p>
         {erreur && <p className="error-text">{erreur}</p>}
+        {message && <p style={{ color: '#0f766e', marginBottom: '12px', textAlign: 'center' }}>{message}</p>}
         <form onSubmit={handleSubmit}>
           <input
             className="auth-input"
@@ -47,25 +72,19 @@ const Login = () => {
             onChange={e => setForm({ ...form, mot_de_passe: e.target.value })}
             required
           />
-          <button className="btn-submit" type="submit">Se connecter</button>
+          <button className="btn-submit" type="submit" disabled={loading}>
+            {loading ? 'Connexion...' : 'Se connecter'}
+          </button>
         </form>
+        <p className="auth-link" style={{ marginTop: '8px' }}>
+          Mot de passe oublié ?
+        </p>
         <p className="auth-link">
           Pas de compte ? <Link to="/register">S'inscrire</Link>
         </p>
       </div>
     </div>
   );
-};
-
-const styles = {
-  container: { minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0C447C', padding: '16px' },
-  card: { background: 'white', padding: '32px 24px', borderRadius: '16px', width: '100%', maxWidth: '360px', boxSizing: 'border-box' },
-  title: { textAlign: 'center', color: '#0C447C', marginBottom: '4px', fontSize: '24px', lineHeight: '1.2' },
-  subtitle: { textAlign: 'center', color: '#555', marginBottom: '24px', fontSize: '16px', marginTop: '4px' },
-  input: { width: '100%', padding: '10px', marginBottom: '12px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '14px', boxSizing: 'border-box' },
-  btn: { width: '100%', padding: '12px', background: '#0C447C', color: 'white', border: 'none', borderRadius: '8px', fontSize: '15px', cursor: 'pointer' },
-  erreur: { color: 'red', fontSize: '13px', marginBottom: '10px' },
-  link: { textAlign: 'center', marginTop: '16px', fontSize: '13px' }
 };
 
 export default Login;

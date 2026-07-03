@@ -2,14 +2,11 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 
-// Barre de navigation principale du projet.
-// Elle permet de se déplacer entre les différentes pages et de se déconnecter.
 const Navbar = () => {
   const { logout } = useApp();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Déconnecte l'utilisateur et le redirige vers la page de connexion.
   const handleLogout = () => {
     logout();
     navigate('/login');
@@ -23,7 +20,7 @@ const Navbar = () => {
       </Link>
 
       <button className="navbar-hamburger" onClick={() => setMenuOpen(!menuOpen)}>
-        {menuOpen ? '✕' : '☰'}
+        {menuOpen ? '✕ Fermer' : '☰ Menu'}
       </button>
 
       <div className="navbar-links">
@@ -40,7 +37,7 @@ const Navbar = () => {
           <Link to="/operations" className="navbar-mobile-link" onClick={() => setMenuOpen(false)}>💳 Opérations</Link>
           <Link to="/beneficiaires" className="navbar-mobile-link" onClick={() => setMenuOpen(false)}>📋 Liste des dépenses</Link>
           <Link to="/parametres" className="navbar-mobile-link" onClick={() => setMenuOpen(false)}>⚙️ Paramètres</Link>
-          <button onClick={handleLogout} className="navbar-btn">Déconnexion</button>
+          <button onClick={handleLogout} className="navbar-btn" style={{margin: '12px 24px'}}>Déconnexion</button>
         </div>
       )}
     </nav>
